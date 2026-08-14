@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Papelaria Mariana - Uniformes Escolares</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -18,7 +19,6 @@
             padding-top: 90px;
         }
 
-        /* --- HEADER FIXED --- */
         header {
             position: fixed;
             top: 0;
@@ -54,15 +54,11 @@
             align-items: center;
             gap: 8px;
             font-size: 15px;
-            transition: background 0.2s, transform 0.1s;
+            transition: 0.2s;
         }
 
         .btn-carrinho-header:hover {
             background-color: #219150;
-        }
-
-        .btn-carrinho-header:active {
-            transform: scale(0.98);
         }
 
         .badge-count {
@@ -75,10 +71,9 @@
             text-align: center;
         }
 
-        /* --- VITRINE DE PRODUTOS --- */
         .container {
             max-width: 1150px;
-            margin: 0 auto 40px auto;
+            margin: 0 auto 40px;
             padding: 0 20px;
         }
 
@@ -105,7 +100,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: 0.2s;
         }
 
         .produto:hover {
@@ -150,17 +145,18 @@
             margin-bottom: 4px;
         }
 
-        select, input[type="number"] {
+        select,
+        input[type="number"] {
             width: 100%;
             padding: 8px 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        select:focus, input[type="number"]:focus {
+        select:focus,
+        input[type="number"]:focus {
             border-color: #3498db;
         }
 
@@ -174,25 +170,22 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-            transition: background 0.2s;
         }
 
         .btn-add:hover {
             background-color: #2980b9;
         }
 
-        /* --- DRAWER (CARRINHO LATERAL) --- */
+        /* DRAWER */
+
         .drawer-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
+            inset: 0;
+            background: rgba(0,0,0,0.5);
             z-index: 998;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: 0.3s;
         }
 
         .drawer-overlay.ativo {
@@ -209,7 +202,7 @@
             height: 100vh;
             background: white;
             z-index: 999;
-            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+            box-shadow: -4px 0 15px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
             transition: right 0.3s ease-in-out;
@@ -239,11 +232,6 @@
             font-size: 24px;
             cursor: pointer;
             color: #888;
-            transition: color 0.2s;
-        }
-
-        .btn-fechar:hover {
-            color: #333;
         }
 
         .drawer-body {
@@ -258,6 +246,11 @@
             align-items: center;
             padding: 12px 0;
             border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+
+        .item-info {
+            flex: 1;
         }
 
         .item-info h4 {
@@ -268,7 +261,13 @@
         .item-info p {
             font-size: 12px;
             color: #777;
-            margin-top: 2px;
+            margin-top: 3px;
+        }
+
+        .qtd-controle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .qtd-btn {
@@ -279,11 +278,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .qtd-btn:hover {
-            background: #cbd5e1;
         }
 
         .btn-remover-sm {
@@ -295,10 +289,6 @@
             margin-top: 4px;
             padding: 0;
             text-decoration: underline;
-        }
-
-        .btn-remover-sm:hover {
-            color: #c0392b;
         }
 
         .drawer-footer {
@@ -326,370 +316,505 @@
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.2s;
         }
 
         .btn-checkout:hover {
             background: #219150;
         }
+
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 17px;
+            }
+
+            .btn-carrinho-header {
+                padding: 9px 12px;
+            }
+
+            .produto {
+                width: 100%;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-    <!-- HEADER DA LOJA -->
-    <header>
-        <a href="index.html" class="logo">Papelaria Mariana</a>
-        <button class="btn-carrinho-header" onclick="abrirDrawer()" aria-label="Abrir carrinho de compras">
-            🛒 Carrinho <span class="badge-count" id="badge-total">0</span>
+<header>
+    <a href="index.html" class="logo">Papelaria Mariana</a>
+
+    <button class="btn-carrinho-header"
+            onclick="abrirDrawer()"
+            aria-label="Abrir carrinho">
+        🛒 Carrinho
+        <span class="badge-count" id="badge-total">0</span>
+    </button>
+</header>
+
+<div class="container">
+
+    <h1 class="titulo-pagina">Uniformes Escolares</h1>
+
+    <div class="vitrine" id="vitrine"></div>
+
+</div>
+
+<div class="drawer-overlay"
+     id="drawerOverlay"
+     onclick="fecharDrawer()">
+</div>
+
+<div class="cart-drawer"
+     id="cartDrawer"
+     role="dialog"
+     aria-modal="true">
+
+    <div class="drawer-header">
+        <h2>🛒 Meu Carrinho</h2>
+
+        <button class="btn-fechar"
+                onclick="fecharDrawer()">
+            &times;
         </button>
-    </header>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <div class="container">
-        <h1 class="titulo-pagina">Uniformes Escolares</h1>
-
-        <div class="vitrine">
-
-            <!-- 1. TÊNIS ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">👟</div>
-                    <h3>Tênis Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 80,58</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamTenis">Tamanho:</label>
-                        <select id="tamTenis">
-                            <option value="23">23</option><option value="24">24</option>
-                            <option value="25">25</option><option value="26">26</option>
-                            <option value="27">27</option><option value="28">28</option>
-                            <option value="29">29</option><option value="30">30</option>
-                            <option value="31">31</option><option value="32">32</option>
-                            <option value="33">33</option><option value="34">34</option>
-                            <option value="35">35</option><option value="36">36</option>
-                            <option value="37">37</option><option value="38">38</option>
-                            <option value="39">39</option><option value="40">40</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdTenis">Quantidade:</label>
-                        <input type="number" id="qtdTenis" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Tênis Escolar - Uniforme Escolar', 80.58, 'tamTenis', 'qtdTenis')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 2. MEIA ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">🧦</div>
-                    <h3>Meia Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 8,50</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamMeia">Tamanho:</label>
-                        <select id="tamMeia">
-                            <option value="P (23 ao 26)">P (23 ao 26)</option>
-                            <option value="M (27 ao 32)">M (27 ao 32)</option>
-                            <option value="G (33 ao 36)">G (33 ao 36)</option>
-                            <option value="GG (37 ao 40)">GG (37 ao 40)</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdMeia">Quantidade:</label>
-                        <input type="number" id="qtdMeia" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Meia Escolar - Uniforme Escolar', 8.50, 'tamMeia', 'qtdMeia')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 3. MOLETOM ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">🧥</div>
-                    <h3>Moletom Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 52,98</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamMoletom">Tamanho:</label>
-                        <select id="tamMoletom">
-                            <option value="2">2</option><option value="4">4</option>
-                            <option value="6">6</option><option value="8">8</option>
-                            <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option>
-                            <option value="P">P</option><option value="M">M</option>
-                            <option value="G">G</option><option value="GG">GG</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdMoletom">Quantidade:</label>
-                        <input type="number" id="qtdMoletom" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Moletom Escolar - Uniforme Escolar', 52.98, 'tamMoletom', 'qtdMoletom')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 4. CAMISETA ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">👕</div>
-                    <h3>Camiseta Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 30,00</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamCamiseta">Tamanho:</label>
-                        <select id="tamCamiseta">
-                            <option value="2">2</option><option value="4">4</option>
-                            <option value="6">6</option><option value="8">8</option>
-                            <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option>
-                            <option value="P">P</option><option value="M">M</option>
-                            <option value="G">G</option><option value="GG">GG</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdCamiseta">Quantidade:</label>
-                        <input type="number" id="qtdCamiseta" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Camiseta Escolar - Uniforme Escolar', 30.00, 'tamCamiseta', 'qtdCamiseta')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 5. CALÇA ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">👖</div>
-                    <h3>Calça Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 59,90</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamCalca">Tamanho:</label>
-                        <select id="tamCalca">
-                            <option value="2">2</option><option value="4">4</option>
-                            <option value="6">6</option><option value="8">8</option>
-                            <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option>
-                            <option value="P">P</option><option value="M">M</option>
-                            <option value="G">G</option><option value="GG">GG</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdCalca">Quantidade:</label>
-                        <input type="number" id="qtdCalca" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Calça Escolar - Uniforme Escolar', 59.90, 'tamCalca', 'qtdCalca')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 6. JAQUETA ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">🧥</div>
-                    <h3>Jaqueta Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 59,90</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamJaqueta">Tamanho:</label>
-                        <select id="tamJaqueta">
-                            <option value="2">2</option><option value="4">4</option>
-                            <option value="6">6</option><option value="8">8</option>
-                            <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option>
-                            <option value="P">P</option><option value="M">M</option>
-                            <option value="G">G</option><option value="GG">GG</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdJaqueta">Quantidade:</label>
-                        <input type="number" id="qtdJaqueta" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Jaqueta Escolar - Uniforme Escolar', 59.90, 'tamJaqueta', 'qtdJaqueta')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-            <!-- 7. BERMUDA ESCOLAR -->
-            <div class="produto">
-                <div>
-                    <div class="produto-img">🩳</div>
-                    <h3>Bermuda Escolar - Uniforme Escolar</h3>
-                    <div class="preco">R$ 36,14</div>
-
-                    <div class="campo-grupo">
-                        <label for="tamBermuda">Tamanho:</label>
-                        <select id="tamBermuda">
-                            <option value="2">2</option><option value="4">4</option>
-                            <option value="6">6</option><option value="8">8</option>
-                            <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option>
-                            <option value="P">P</option><option value="M">M</option>
-                            <option value="G">G</option><option value="GG">GG</option>
-                        </select>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="qtdBermuda">Quantidade:</label>
-                        <input type="number" id="qtdBermuda" value="1" min="1">
-                    </div>
-                </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Bermuda Escolar - Uniforme Escolar', 36.14, 'tamBermuda', 'qtdBermuda')">
-                    Adicionar ao Carrinho
-                </button>
-            </div>
-
-        </div>
     </div>
 
-    <!-- FUNDO ESCURO DO DRAWER -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+    <div class="drawer-body" id="drawerItems"></div>
 
-    <!-- GAVETA LATERAL DO CARRINHO (DRAWER) -->
-    <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Seu carrinho de compras">
-        <div class="drawer-header">
-            <h2>🛒 Meu Carrinho</h2>
-            <button class="btn-fechar" onclick="fecharDrawer()" aria-label="Fechar carrinho">&times;</button>
+    <div class="drawer-footer">
+
+        <div class="total-linha">
+            <span>Total:</span>
+            <span id="drawerTotal">R$ 0,00</span>
         </div>
 
-        <div class="drawer-body" id="drawerItems">
-            <!-- Itens do carrinho serão desenhados aqui dinamicamente -->
-        </div>
+        <a href="carrinho.html"
+           class="btn-checkout">
+            Ver Carrinho / Finalizar
+        </a>
 
-        <div class="drawer-footer">
-            <div class="total-linha">
-                <span>Total:</span>
-                <span id="drawerTotal">R$ 0,00</span>
-            </div>
-            <a href="carrinho.html" class="btn-checkout">Ver Carrinho / Finalizar</a>
-        </div>
     </div>
+</div>
 
-    <!-- JAVASCRIPT INTEGRADO -->
-    <script>
-        // Formatador BRL nativo
-        const formatarMoeda = (valor) => {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
-        };
+<script>
 
-        function abrirDrawer() {
-            document.getElementById('cartDrawer').classList.add('ativo');
-            document.getElementById('drawerOverlay').classList.add('ativo');
-            renderizarDrawer();
-        }
+const produtos = [
 
-        function fecharDrawer() {
-            document.getElementById('cartDrawer').classList.remove('ativo');
-            document.getElementById('drawerOverlay').classList.remove('ativo');
-        }
+    {
+        id: "tenis",
+        nome: "Tênis Escolar - Uniforme Escolar",
+        preco: 80.58,
+        imagem: "👟",
+        tamanhos: [
+            "23","24","25","26","27","28","29","30",
+            "31","32","33","34","35","36","37","38","39","40"
+        ]
+    },
 
-        // Fechar gaveta com tecla ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                fecharDrawer();
-            }
+    {
+        id: "meia",
+        nome: "Meia Escolar - Uniforme Escolar",
+        preco: 8.50,
+        imagem: "🧦",
+        tamanhos: [
+            "P (23 ao 26)",
+            "M (27 ao 32)",
+            "G (33 ao 36)",
+            "GG (37 ao 40)"
+        ]
+    },
+
+    {
+        id: "moletom",
+        nome: "Moletom Escolar - Uniforme Escolar",
+        preco: 52.98,
+        imagem: "🧥",
+        tamanhos: [
+            "2","4","6","8","10","12","14",
+            "P","M","G","GG"
+        ]
+    },
+
+    {
+        id: "camiseta",
+        nome: "Camiseta Escolar - Uniforme Escolar",
+        preco: 30.00,
+        imagem: "👕",
+        tamanhos: [
+            "2","4","6","8","10","12","14",
+            "P","M","G","GG"
+        ]
+    },
+
+    {
+        id: "calca",
+        nome: "Calça Escolar - Uniforme Escolar",
+        preco: 59.90,
+        imagem: "👖",
+        tamanhos: [
+            "2","4","6","8","10","12","14",
+            "P","M","G","GG"
+        ]
+    },
+
+    {
+        id: "jaqueta",
+        nome: "Jaqueta Escolar - Uniforme Escolar",
+        preco: 59.90,
+        imagem: "🧥",
+        tamanhos: [
+            "2","4","6","8","10","12","14",
+            "P","M","G","GG"
+        ]
+    },
+
+    {
+        id: "bermuda",
+        nome: "Bermuda Escolar - Uniforme Escolar",
+        preco: 36.14,
+        imagem: "🩳",
+        tamanhos: [
+            "2","4","6","8","10","12","14",
+            "P","M","G","GG"
+        ]
+    }
+
+];
+
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    }).format(valor);
+}
+
+function obterCarrinho() {
+    return JSON.parse(localStorage.getItem("carrinho")) || [];
+}
+
+function salvarCarrinho(carrinho) {
+    localStorage.setItem(
+        "carrinho",
+        JSON.stringify(carrinho)
+    );
+}
+
+function renderizarProdutos() {
+
+    const vitrine = document.getElementById("vitrine");
+
+    vitrine.innerHTML = "";
+
+    produtos.forEach(produto => {
+
+        const card = document.createElement("div");
+        card.className = "produto";
+
+        const opcoesTamanho = produto.tamanhos
+            .map(tamanho =>
+                `<option value="${tamanho}">${tamanho}</option>`
+            )
+            .join("");
+
+        card.innerHTML = `
+            <div>
+
+                <div class="produto-img">
+                    ${produto.imagem}
+                </div>
+
+                <h3>${produto.nome}</h3>
+
+                <div class="preco">
+                    ${formatarMoeda(produto.preco)}
+                </div>
+
+                <div class="campo-grupo">
+
+                    <label>
+                        Tamanho:
+                    </label>
+
+                    <select id="tamanho-${produto.id}">
+                        ${opcoesTamanho}
+                    </select>
+
+                </div>
+
+                <div class="campo-grupo">
+
+                    <label>
+                        Quantidade:
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantidade-${produto.id}"
+                        value="1"
+                        min="1"
+                    >
+
+                </div>
+
+            </div>
+
+            <button
+                class="btn-add"
+                onclick="adicionarAoCarrinho('${produto.id}')">
+
+                Adicionar ao Carrinho
+
+            </button>
+        `;
+
+        vitrine.appendChild(card);
+    });
+}
+
+function adicionarAoCarrinho(idProduto) {
+
+    const produto = produtos.find(
+        p => p.id === idProduto
+    );
+
+    if (!produto) return;
+
+    const tamanho =
+        document.getElementById(
+            `tamanho-${idProduto}`
+        ).value;
+
+    const campoQuantidade =
+        document.getElementById(
+            `quantidade-${idProduto}`
+        );
+
+    const quantidade =
+        parseInt(campoQuantidade.value);
+
+    if (!quantidade || quantidade < 1) {
+        alert("Informe uma quantidade válida.");
+        return;
+    }
+
+    const carrinho = obterCarrinho();
+
+    const existente = carrinho.find(item =>
+        item.produtoId === produto.id &&
+        item.tamanho === tamanho
+    );
+
+    if (existente) {
+
+        existente.quantidade += quantidade;
+
+    } else {
+
+        carrinho.push({
+            produtoId: produto.id,
+            nome: produto.nome,
+            preco: produto.preco,
+            tamanho: tamanho,
+            quantidade: quantidade
         });
 
-        function adicionarAoCarrinho(nome, preco, idTamanho, idQtd) {
-            const elTamanho = document.getElementById(idTamanho);
-            const elQtd = document.getElementById(idQtd);
-            const tamanho = elTamanho ? elTamanho.value : 'Padrão';
-            const quantidade = parseInt(elQtd ? elQtd.value : 1);
+    }
 
-            if (isNaN(quantidade) || quantidade <= 0) return;
+    salvarCarrinho(carrinho);
 
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const itemExistente = carrinho.find(item => item.nome === nome && item.tamanho === tamanho);
+    campoQuantidade.value = 1;
 
-            if (itemExistente) {
-                itemExistente.quantidade += quantidade;
-            } else {
-                carrinho.push({ nome, preco, tamanho, quantidade });
-            }
+    atualizarContador();
 
-            localStorage.setItem('carrinho', JSON.stringify(carrinho));
-            
-            // Resetar a quantidade para 1 após adicionar
-            if (elQtd) elQtd.value = 1;
+    abrirDrawer();
+}
 
-            atualizarContadorHeader();
-            abrirDrawer();
+function alterarQuantidade(index, mudanca) {
+
+    const carrinho = obterCarrinho();
+
+    if (!carrinho[index]) return;
+
+    carrinho[index].quantidade += mudanca;
+
+    if (carrinho[index].quantidade <= 0) {
+        carrinho.splice(index, 1);
+    }
+
+    salvarCarrinho(carrinho);
+
+    atualizarContador();
+    renderizarDrawer();
+}
+
+function removerItem(index) {
+
+    const carrinho = obterCarrinho();
+
+    carrinho.splice(index, 1);
+
+    salvarCarrinho(carrinho);
+
+    atualizarContador();
+    renderizarDrawer();
+}
+
+function renderizarDrawer() {
+
+    const container =
+        document.getElementById("drawerItems");
+
+    const totalElemento =
+        document.getElementById("drawerTotal");
+
+    const carrinho = obterCarrinho();
+
+    if (carrinho.length === 0) {
+
+        container.innerHTML = `
+            <p style="
+                text-align:center;
+                color:#888;
+                margin-top:40px;
+            ">
+                Seu carrinho está vazio.
+            </p>
+        `;
+
+        totalElemento.innerText =
+            formatarMoeda(0);
+
+        return;
+    }
+
+    let total = 0;
+
+    container.innerHTML = "";
+
+    carrinho.forEach((item, index) => {
+
+        const subtotal =
+            item.preco * item.quantidade;
+
+        total += subtotal;
+
+        const div =
+            document.createElement("div");
+
+        div.className = "item-drawer";
+
+        div.innerHTML = `
+            <div class="item-info">
+
+                <h4>${item.nome}</h4>
+
+                <p>
+                    Tamanho: ${item.tamanho}
+                </p>
+
+                <p>
+                    ${formatarMoeda(item.preco)}
+                </p>
+
+                <button
+                    class="btn-remover-sm"
+                    onclick="removerItem(${index})">
+
+                    Remover
+
+                </button>
+
+            </div>
+
+            <div class="qtd-controle">
+
+                <button
+                    class="qtd-btn"
+                    onclick="alterarQuantidade(${index}, -1)">
+                    -
+                </button>
+
+                <strong>
+                    ${item.quantidade}
+                </strong>
+
+                <button
+                    class="qtd-btn"
+                    onclick="alterarQuantidade(${index}, 1)">
+                    +
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+
+    totalElemento.innerText =
+        formatarMoeda(total);
+}
+
+function atualizarContador() {
+
+    const carrinho = obterCarrinho();
+
+    const total =
+        carrinho.reduce(
+            (soma, item) =>
+                soma + item.quantidade,
+            0
+        );
+
+    document.getElementById(
+        "badge-total"
+    ).innerText = total;
+}
+
+function abrirDrawer() {
+
+    document
+        .getElementById("cartDrawer")
+        .classList.add("ativo");
+
+    document
+        .getElementById("drawerOverlay")
+        .classList.add("ativo");
+
+    renderizarDrawer();
+}
+
+function fecharDrawer() {
+
+    document
+        .getElementById("cartDrawer")
+        .classList.remove("ativo");
+
+    document
+        .getElementById("drawerOverlay")
+        .classList.remove("ativo");
+}
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+            fecharDrawer();
         }
 
-        function alterarQtdDrawer(index, mudanca) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            if (carrinho[index]) {
-                carrinho[index].quantidade += mudanca;
-                if (carrinho[index].quantidade <= 0) {
-                    carrinho.splice(index, 1);
-                }
-                localStorage.setItem('carrinho', JSON.stringify(carrinho));
-                renderizarDrawer();
-                atualizarContadorHeader();
-            }
-        }
+    }
+);
 
-        function renderizarDrawer() {
-            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const container = document.getElementById('drawerItems');
-            const totalEl = document.getElementById('drawerTotal');
+window.addEventListener(
+    "storage",
+    function() {
+        atualizarContador();
+    }
+);
 
-            if (carrinho.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #888; margin-top: 40px;">Seu carrinho está vazio.</p>';
-                totalEl.innerText = formatarMoeda(0);
-                return;
-            }
+renderizarProdutos();
+atualizarContador();
 
-            let html = '';
-            let total = 0;
+</script>
 
-            carrinho.forEach((item, index) => {
-                const subtotal = item.preco * item.quantidade;
-                total += subtotal;
-
-                html += `
-                    <div class="item-drawer">
-                        <div class="item-info">
-                            <h4>${item.nome}</h4>
-                            <p>Tamanho: ${item.tamanho}</p>
-                            <p>${formatarMoeda(item.preco)}</p>
-                            <button class="btn-remover-sm" onclick="alterarQtdDrawer(${index}, -${item.quantidade})">Remover</button>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, -1)" aria-label="Diminuir quantidade">-</button>
-                            <strong>${item.quantidade}</strong>
-                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, 1)" aria-label="Aumentar quantidade">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-            totalEl.innerText = formatarMoeda(total);
-        }
-
-        function atualizarContadorHeader() {
-            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const totalItens = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
-            document.getElementById('badge-total').innerText = totalItens;
-        }
-
-        window.onload = atualizarContadorHeader;
-    </script>
 </body>
 </html>

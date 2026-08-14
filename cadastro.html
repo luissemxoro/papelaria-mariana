@@ -1,103 +1,287 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Papelaria Mariana - Cadastro</title>
+
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            padding: 20px; 
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 20px;
             background-color: #f4f4f9;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centraliza o formulário na tela */
+            align-items: center;
+            color: #333;
         }
-        .formulario { 
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .formulario {
             background-color: white;
-            border: 1px solid #ddd; 
-            padding: 30px; 
+            border: 1px solid #ddd;
+            padding: 30px;
             width: 100%;
-            max-width: 400px; /* Um pouco mais largo que o produto */
-            border-radius: 8px; 
+            max-width: 450px;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
+        .formulario h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
         .grupo-input {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
         }
+
         input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-            box-sizing: border-box; /* Garante que o input não vaze para fora da caixa */
         }
-        button { 
-            background-color: #28a745; /* Cor verde para confirmar */
-            color: white; 
-            border: none; 
-            padding: 12px 15px; 
-            cursor: pointer; 
-            border-radius: 5px; 
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .observacao {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-radius: 5px;
             width: 100%;
             font-size: 16px;
             font-weight: bold;
             margin-top: 10px;
         }
-        button:hover { 
-            background-color: #218838; 
+
+        button:hover {
+            background-color: #218838;
         }
+
+        .voltar {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #0056b3;
+            text-decoration: none;
+        }
+
     </style>
+
 </head>
+
 <body>
 
-    <h1>Crie sua conta</h1>
-    
-    <div class="formulario">
-        <h2>Dados para Entrega</h2>
-        
+<h1>Crie sua conta</h1>
+
+<div class="formulario">
+
+    <h2>Dados para Entrega</h2>
+
+    <form id="formCadastro">
+
         <div class="grupo-input">
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" placeholder="Ex: João da Silva">
+
+            <label for="nome">
+                Nome Completo:
+            </label>
+
+            <input
+                type="text"
+                id="nome"
+                placeholder="Ex: João da Silva"
+                required
+            >
+
         </div>
 
         <div class="grupo-input">
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" placeholder="seuemail@exemplo.com">
+
+            <label for="email">
+                E-mail:
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="seuemail@exemplo.com"
+                required
+            >
+
         </div>
 
         <div class="grupo-input">
-            <label for="senha">Crie uma Senha:</label>
-            <input type="password" id="senha" placeholder="Mínimo 6 caracteres">
+
+            <label for="senha">
+                Crie uma Senha:
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Mínimo 6 caracteres"
+                minlength="6"
+                required
+            >
+
+            <div class="observacao">
+                A senha deve possuir pelo menos 6 caracteres.
+            </div>
+
         </div>
 
         <div class="grupo-input">
-            <label for="endereco">Endereço de Entrega (Rua, Número, Bairro):</label>
-            <input type="text" id="endereco" placeholder="Ex: Rua das Flores, 123">
+
+            <label for="endereco">
+                Endereço de Entrega:
+            </label>
+
+            <input
+                type="text"
+                id="endereco"
+                placeholder="Rua, número e bairro"
+                required
+            >
+
         </div>
 
-        <button onclick="finalizarCadastro()">Salvar Meu Perfil</button>
-    </div>
+        <button type="submit">
+            Continuar para Pagamento
+        </button>
 
-    <script>
-        function finalizarCadastro() {
-            const nomeCliente = document.getElementById('nome').value;
-            
-            if(nomeCliente === "") {
-                alert("Por favor, preencha pelo menos o seu nome!");
-            } else {
-                alert("Cadastro salvo com sucesso!");
-                // Leva o cliente para a tela de pagamento nova:
-                window.location.href = 'pagamento.html';
+    </form>
+
+    <a href="carrinho.html"
+       class="voltar">
+
+        ← Voltar para o carrinho
+
+    </a>
+
+</div>
+
+<script>
+
+function obterCarrinho() {
+
+    return JSON.parse(
+        localStorage.getItem("carrinho")
+    ) || [];
+
+}
+
+document
+    .getElementById("formCadastro")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            const carrinho =
+                obterCarrinho();
+
+            if (carrinho.length === 0) {
+
+                alert(
+                    "Seu carrinho está vazio."
+                );
+
+                window.location.href =
+                    "index.html";
+
+                return;
             }
+
+            const nome =
+                document
+                    .getElementById("nome")
+                    .value
+                    .trim();
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+            const senha =
+                document
+                    .getElementById("senha")
+                    .value;
+
+            const endereco =
+                document
+                    .getElementById("endereco")
+                    .value
+                    .trim();
+
+            if (senha.length < 6) {
+
+                alert(
+                    "A senha precisa ter pelo menos 6 caracteres."
+                );
+
+                return;
+            }
+
+            const cliente = {
+
+                nome: nome,
+                email: email,
+                senha: senha,
+                endereco: endereco
+
+            };
+
+            localStorage.setItem(
+                "cliente",
+                JSON.stringify(cliente)
+            );
+
+            window.location.href =
+                "pagamento.html";
+
         }
-    </script>
+    );
+
+</script>
 
 </body>
 </html>

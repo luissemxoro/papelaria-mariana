@@ -1,140 +1,429 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Papelaria Mariana - Carrinho</title>
+
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            padding: 20px; 
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 20px;
             background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            color: #333;
         }
-        .carrinho { 
-            background-color: white;
-            border: 1px solid #ddd; 
-            padding: 20px; 
+
+        .container {
             width: 100%;
-            max-width: 500px;
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: auto;
         }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .carrinho {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
         .item-carrinho {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
             border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            padding: 18px 0;
         }
+
+        .detalhes-produto {
+            flex: 1;
+        }
+
         .detalhes-produto h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 7px;
             font-size: 18px;
             color: #333;
         }
+
         .detalhes-produto p {
-            margin: 0;
+            margin: 4px 0;
             color: #666;
+            font-size: 14px;
         }
+
         .preco {
             font-size: 18px;
             font-weight: bold;
             color: #28a745;
         }
+
+        .controle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .controle button {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #e2e8f0;
+            font-weight: bold;
+        }
+
+        .remover {
+            background: none !important;
+            color: #e74c3c;
+            width: auto !important;
+            text-decoration: underline;
+            margin-left: 8px;
+        }
+
         .total {
             display: flex;
             justify-content: space-between;
             font-size: 20px;
             font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
         }
-        .botao-principal { 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            padding: 12px 15px; 
-            cursor: pointer; 
-            border-radius: 5px; 
+
+        .total span:last-child {
+            color: #28a745;
+        }
+
+        .botoes {
+            margin-top: 20px;
+        }
+
+        .botao-principal,
+        .botao-secundario {
+            display: block;
             width: 100%;
+            padding: 13px;
+            border-radius: 6px;
             font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
         }
-        .botao-principal:hover { 
-            background-color: #218838; 
+
+        .botao-principal {
+            background-color: #28a745;
+            color: white;
+            border: none;
         }
+
+        .botao-principal:hover {
+            background-color: #218838;
+        }
+
         .botao-secundario {
             background-color: transparent;
             color: #0056b3;
             border: 1px solid #0056b3;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 100%;
-            font-size: 16px;
             margin-top: 10px;
         }
-        .botao-secundario:hover {
-            background-color: #f0f8ff;
+
+        .vazio {
+            text-align: center;
+            padding: 40px 10px;
+            color: #777;
         }
+
+        .vazio a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #3498db;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+
+            .item-carrinho {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .preco {
+                align-self: flex-end;
+            }
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
+<div class="container">
+
     <h1>Seu Carrinho de Compras</h1>
-    
+
     <div class="carrinho">
-        <div class="item-carrinho">
-            <div class="detalhes-produto">
-                <h3>Uniforme Escolar Padrão - Gola Azul</h3>
-                <p>Tamanho: <strong id="tamanho-na-tela">--</strong></p>
-                <p>Quantidade: <strong id="quantidade-na-tela">--</strong></p>
-            </div>
-            <div class="preco" id="preco-item">
-                R$ 30,00
-            </div>
-        </div>
+
+        <div id="lista-carrinho"></div>
 
         <div class="total">
-            <span>Total a Pagar:</span>
-            <span style="color: #28a745;" id="preco-total">R$ 30,00</span>
+
+            <span>
+                Total a Pagar:
+            </span>
+
+            <span id="preco-total">
+                R$ 0,00
+            </span>
+
         </div>
-        
-        <button class="botao-principal" onclick="irParaCadastro()">Finalizar Compra</button>
-        <button class="botao-secundario" onclick="voltarParaLoja()">Continuar Comprando</button>
+
+        <div class="botoes">
+
+            <button
+                class="botao-principal"
+                onclick="irParaCadastro()">
+
+                Finalizar Compra
+
+            </button>
+
+            <a
+                href="index.html"
+                class="botao-secundario">
+
+                Continuar Comprando
+
+            </a>
+
+        </div>
+
     </div>
 
-    <script>
-        window.onload = function() {
-            // Busca o produto, preço, tamanho e quantidade salvos
-            const produto = localStorage.getItem('produtoSalvo') || 'Uniforme Escolar';
-            const precoUnitario = parseFloat(localStorage.getItem('precoSalvo')) || 30.00;
-            const tamanho = localStorage.getItem('tamanhoSalvo') || 'M';
-            const quantidade = localStorage.getItem('quantidadeSalva') || 1;
-            
-            // Atualiza os textos na tela
-            document.querySelector('.detalhes-produto h3').innerText = produto;
-            document.getElementById('tamanho-na-tela').innerText = tamanho;
-            document.getElementById('quantidade-na-tela').innerText = quantidade;
+</div>
 
-            // Faz o cálculo dinâmico do total
-            const valorTotal = precoUnitario * parseInt(quantidade);
-            const valorFormatado = "R$ " + valorTotal.toFixed(2).replace('.', ',');
+<script>
 
-            document.getElementById('preco-item').innerText = valorFormatado;
-            document.getElementById('preco-total').innerText = valorFormatado;
-        };
+function formatarMoeda(valor) {
 
-        function irParaCadastro() {
-            window.location.href = 'cadastro.html';
+    return new Intl.NumberFormat(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL"
         }
+    ).format(valor);
 
-        function voltarParaLoja() {
-            window.location.href = 'index.html';
-        }
-    </script>
+}
+
+function obterCarrinho() {
+
+    return JSON.parse(
+        localStorage.getItem("carrinho")
+    ) || [];
+
+}
+
+function salvarCarrinho(carrinho) {
+
+    localStorage.setItem(
+        "carrinho",
+        JSON.stringify(carrinho)
+    );
+
+}
+
+function renderizarCarrinho() {
+
+    const carrinho = obterCarrinho();
+
+    const lista =
+        document.getElementById(
+            "lista-carrinho"
+        );
+
+    const totalElemento =
+        document.getElementById(
+            "preco-total"
+        );
+
+    if (carrinho.length === 0) {
+
+        lista.innerHTML = `
+            <div class="vazio">
+
+                <h3>
+                    Seu carrinho está vazio.
+                </h3>
+
+                <p>
+                    Adicione produtos para continuar.
+                </p>
+
+                <a href="index.html">
+                    Voltar para a loja
+                </a>
+
+            </div>
+        `;
+
+        totalElemento.innerText =
+            formatarMoeda(0);
+
+        return;
+    }
+
+    let total = 0;
+
+    lista.innerHTML = "";
+
+    carrinho.forEach((item, index) => {
+
+        const subtotal =
+            item.preco * item.quantidade;
+
+        total += subtotal;
+
+        const elemento =
+            document.createElement("div");
+
+        elemento.className =
+            "item-carrinho";
+
+        elemento.innerHTML = `
+
+            <div class="detalhes-produto">
+
+                <h3>
+                    ${item.nome}
+                </h3>
+
+                <p>
+                    Tamanho:
+                    <strong>
+                        ${item.tamanho}
+                    </strong>
+                </p>
+
+                <p>
+                    Preço unitário:
+                    ${formatarMoeda(item.preco)}
+                </p>
+
+                <div class="controle">
+
+                    <button
+                        onclick="alterarQuantidade(${index}, -1)">
+                        -
+                    </button>
+
+                    <strong>
+                        ${item.quantidade}
+                    </strong>
+
+                    <button
+                        onclick="alterarQuantidade(${index}, 1)">
+                        +
+                    </button>
+
+                    <button
+                        class="remover"
+                        onclick="removerItem(${index})">
+
+                        Remover
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="preco">
+
+                ${formatarMoeda(subtotal)}
+
+            </div>
+        `;
+
+        lista.appendChild(elemento);
+
+    });
+
+    totalElemento.innerText =
+        formatarMoeda(total);
+}
+
+function alterarQuantidade(index, mudanca) {
+
+    const carrinho = obterCarrinho();
+
+    if (!carrinho[index]) return;
+
+    carrinho[index].quantidade += mudanca;
+
+    if (carrinho[index].quantidade <= 0) {
+        carrinho.splice(index, 1);
+    }
+
+    salvarCarrinho(carrinho);
+
+    renderizarCarrinho();
+}
+
+function removerItem(index) {
+
+    const carrinho = obterCarrinho();
+
+    carrinho.splice(index, 1);
+
+    salvarCarrinho(carrinho);
+
+    renderizarCarrinho();
+}
+
+function irParaCadastro() {
+
+    const carrinho = obterCarrinho();
+
+    if (carrinho.length === 0) {
+
+        alert(
+            "Seu carrinho está vazio."
+        );
+
+        return;
+    }
+
+    window.location.href =
+        "cadastro.html";
+
+}
+
+renderizarCarrinho();
+
+</script>
 
 </body>
 </html>
