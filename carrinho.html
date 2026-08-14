@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Papelaria Mariana - Carrinho</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .carrinho { 
+            background-color: white;
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .detalhes-produto h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .detalhes-produto p {
+            margin: 0;
+            color: #666;
+        }
+        .preco {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .botao-principal { 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            padding: 12px 15px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .botao-principal:hover { 
+            background-color: #218838; 
+        }
+        .botao-secundario {
+            background-color: transparent;
+            color: #0056b3;
+            border: 1px solid #0056b3;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .botao-secundario:hover {
+            background-color: #f0f8ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Seu Carrinho de Compras</h1>
+    
+    <div class="carrinho">
+        <div class="item-carrinho">
+            <div class="detalhes-produto">
+                <h3>Uniforme Escolar Padrão - Gola Azul</h3>
+                <p>Tamanho: <strong id="tamanho-na-tela">--</strong></p>
+                <p>Quantidade: <strong id="quantidade-na-tela">--</strong></p>
+            </div>
+            <div class="preco" id="preco-item">
+                R$ 30,00
+            </div>
+        </div>
+
+        <div class="total">
+            <span>Total a Pagar:</span>
+            <span style="color: #28a745;" id="preco-total">R$ 30,00</span>
+        </div>
+        
+        <button class="botao-principal" onclick="irParaCadastro()">Finalizar Compra</button>
+        <button class="botao-secundario" onclick="voltarParaLoja()">Continuar Comprando</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Busca o produto, preço, tamanho e quantidade salvos
+            const produto = localStorage.getItem('produtoSalvo') || 'Uniforme Escolar';
+            const precoUnitario = parseFloat(localStorage.getItem('precoSalvo')) || 30.00;
+            const tamanho = localStorage.getItem('tamanhoSalvo') || 'M';
+            const quantidade = localStorage.getItem('quantidadeSalva') || 1;
+            
+            // Atualiza os textos na tela
+            document.querySelector('.detalhes-produto h3').innerText = produto;
+            document.getElementById('tamanho-na-tela').innerText = tamanho;
+            document.getElementById('quantidade-na-tela').innerText = quantidade;
+
+            // Faz o cálculo dinâmico do total
+            const valorTotal = precoUnitario * parseInt(quantidade);
+            const valorFormatado = "R$ " + valorTotal.toFixed(2).replace('.', ',');
+
+            document.getElementById('preco-item').innerText = valorFormatado;
+            document.getElementById('preco-total').innerText = valorFormatado;
+        };
+
+        function irParaCadastro() {
+            window.location.href = 'cadastro.html';
+        }
+
+        function voltarParaLoja() {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

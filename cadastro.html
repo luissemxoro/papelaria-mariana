@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Papelaria Mariana - Cadastro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza o formulário na tela */
+        }
+        .formulario { 
+            background-color: white;
+            border: 1px solid #ddd; 
+            padding: 30px; 
+            width: 100%;
+            max-width: 400px; /* Um pouco mais largo que o produto */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .grupo-input {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box; /* Garante que o input não vaze para fora da caixa */
+        }
+        button { 
+            background-color: #28a745; /* Cor verde para confirmar */
+            color: white; 
+            border: none; 
+            padding: 12px 15px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover { 
+            background-color: #218838; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Crie sua conta</h1>
+    
+    <div class="formulario">
+        <h2>Dados para Entrega</h2>
+        
+        <div class="grupo-input">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" placeholder="Ex: João da Silva">
+        </div>
+
+        <div class="grupo-input">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" placeholder="seuemail@exemplo.com">
+        </div>
+
+        <div class="grupo-input">
+            <label for="senha">Crie uma Senha:</label>
+            <input type="password" id="senha" placeholder="Mínimo 6 caracteres">
+        </div>
+
+        <div class="grupo-input">
+            <label for="endereco">Endereço de Entrega (Rua, Número, Bairro):</label>
+            <input type="text" id="endereco" placeholder="Ex: Rua das Flores, 123">
+        </div>
+
+        <button onclick="finalizarCadastro()">Salvar Meu Perfil</button>
+    </div>
+
+    <script>
+        function finalizarCadastro() {
+            const nomeCliente = document.getElementById('nome').value;
+            
+            if(nomeCliente === "") {
+                alert("Por favor, preencha pelo menos o seu nome!");
+            } else {
+                alert("Cadastro salvo com sucesso!");
+                // Leva o cliente para a tela de pagamento nova:
+                window.location.href = 'pagamento.html';
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Papelaria Mariana - Pagamento</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pagamento-box { 
+            background-color: white;
+            border: 1px solid #ddd; 
+            padding: 30px; 
+            width: 100%;
+            max-width: 400px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .resumo-valor {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .resumo-valor h3 { margin: 0; color: #333; }
+        .resumo-valor p { font-size: 24px; color: #28a745; font-weight: bold; margin: 10px 0 0 0; }
+        
+        .opcao-pagamento {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .opcao-pagamento input {
+            margin-right: 10px;
+            transform: scale(1.3);
+        }
+        
+        button { 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button:hover { 
+            background-color: #218838; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Finalizar Pedido</h1>
+    
+    <div class="pagamento-box">
+        
+        <div class="resumo-valor">
+            <h3>Total a Pagar:</h3>
+            <p id="valor-final">R$ 0,00</p>
+        </div>
+
+        <h3>Escolha a forma de pagamento:</h3>
+
+        <label class="opcao-pagamento">
+            <input type="radio" name="forma_pagamento" value="pix" checked>
+            <strong>PIX</strong> (Aprovação imediata)
+        </label>
+
+        <label class="opcao-pagamento">
+            <input type="radio" name="forma_pagamento" value="cartao">
+            <strong>Cartão de Crédito</strong> (Até 3x sem juros)
+        </label>
+
+        <button onclick="concluirCompra()">Confirmar Pagamento</button>
+    </div>
+
+    <script>
+        // Quando a página carrega, lê a quantidade salva para calcular o total
+        window.onload = function() {
+            const quantidade = localStorage.getItem('quantidadeSalva') || 1;
+            const precoUnitario = 30.00;
+            const valorTotal = precoUnitario * parseInt(quantidade);
+            
+            document.getElementById('valor-final').innerText = "R$ " + valorTotal.toFixed(2).replace('.', ',');
+        };
+
+        function concluirCompra() {
+            // Descobre qual opção de pagamento o cliente marcou
+            const opcoes = document.getElementsByName('forma_pagamento');
+            let formaEscolhida = "pix";
+            
+            for(let i = 0; i < opcoes.length; i++) {
+                if(opcoes[i].checked) {
+                    formaEscolhida = opcoes[i].value;
+                }
+            }
+
+            if(formaEscolhida === "pix") {
+                alert("Pedido confirmado! A chave PIX será exibida a seguir.");
+            } else {
+                alert("Pedido confirmado! Redirecionando para o sistema de cartão...");
+            }
+            
+            // Limpa a memória do navegador para o próximo pedido
+            localStorage.clear();
+            
+            // Retorna o cliente para a página inicial
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>
