@@ -2,325 +2,645 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Papelaria Mariana - Catálogo de Uniformes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papelaria Mariana - Uniformes Escolares</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            padding: 20px; 
-            background-color: #f4f4f9;
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        h1 {
-            text-align: center;
+
+        body {
+            background-color: #f4f6f8;
             color: #333;
-            margin-bottom: 30px;
+            padding-top: 90px;
         }
+
+        /* --- HEADER FIXED --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+
+        .btn-carrinho-header {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn-carrinho-header:hover {
+            background-color: #219150;
+        }
+
+        .badge-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+
+        /* --- VITRINE DE PRODUTOS --- */
+        .container {
+            max-width: 1150px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .titulo-pagina {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
         .vitrine {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
         }
-        .produto { 
-            background-color: white;
-            border: 1px solid #ddd; 
-            padding: 20px; 
-            width: 260px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+        .produto {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            padding: 20px;
+            width: 320px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.2s;
         }
-        .foto-produto-placeholder {
+
+        .produto:hover {
+            transform: translateY(-4px);
+        }
+
+        .produto-img {
             width: 100%;
-            height: 180px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
+            height: 160px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #888;
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .produto h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            min-height: 40px;
+        }
+
+        .preco {
+            font-size: 22px;
+            color: #27ae60;
             font-weight: bold;
             margin-bottom: 15px;
-            text-align: center;
         }
-        .tamanhos, .quantidade { 
-            margin: 10px 0; 
+
+        .campo-grupo {
+            margin-bottom: 12px;
         }
+
+        .campo-grupo label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
         select, input[type="number"] {
-            padding: 8px;
             width: 100%;
-            margin-top: 5px;
-            font-size: 16px;
-            border-radius: 4px;
+            padding: 8px 10px;
             border: 1px solid #ccc;
-            box-sizing: border-box;
+            border-radius: 6px;
+            font-size: 14px;
         }
-        button { 
-            background-color: #0056b3; 
-            color: white; 
-            border: none; 
-            padding: 12px 15px; 
-            cursor: pointer; 
-            border-radius: 5px; 
+
+        .btn-add {
             width: 100%;
-            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
             font-weight: bold;
+            cursor: pointer;
             margin-top: 10px;
+            transition: background 0.2s;
         }
-        button:hover { 
-            background-color: #004494; 
+
+        .btn-add:hover {
+            background-color: #2980b9;
+        }
+
+        /* --- DRAWER (CARRINHO LATERAL) --- */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.ativo {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            max-width: 90vw;
+            height: 100vh;
+            background: white;
+            z-index: 999;
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease-in-out;
+        }
+
+        .cart-drawer.ativo {
+            right: 0;
+        }
+
+        .drawer-header {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-header h2 {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .btn-fechar {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .drawer-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .item-drawer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-info h4 {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .item-info p {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .qtd-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-remover-sm {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .drawer-footer {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .total-linha {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .btn-checkout {
+            display: block;
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-checkout:hover {
+            background: #219150;
         }
     </style>
 </head>
 <body>
 
-    <h1>Papelaria Mariana - Catálogo de Uniformes</h1>
-    
-    <div class="vitrine">
+    <!-- HEADER DA LOJA -->
+    <header>
+        <a href="index.html" class="logo">✏️ Papelaria Mariana</a>
+        <button class="btn-carrinho-header" onclick="abrirDrawer()">
+            🛒 Carrinho <span class="badge-count" id="badge-total">0</span>
+        </button>
+    </header>
 
-        <!-- 1. TÊNIS ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Tênis ]</div>
-                <h2>Tênis Escolar</h2>
-                <p>Tênis confortável e resistente para o dia a dia.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 80,58</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-1"><strong>Tamanho (Número):</strong></label>
-                    <select id="tamanho-1">
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                        <option value="32">32</option>
-                        <option value="33">33</option>
-                        <option value="34">34</option>
-                        <option value="35">35</option>
-                        <option value="36">36</option>
-                        <option value="37">37</option>
-                        <option value="38">38</option>
-                        <option value="39">39</option>
-                        <option value="40">40</option>
-                    </select>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="container">
+        <h1 class="titulo-pagina">Uniformes Escolares</h1>
+
+        <div class="vitrine">
+
+            <!-- 1. TENIS ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">👟</div>
+                    <h3>Tenis Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 80,58</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamTenis">Tamanho:</label>
+                        <select id="tamTenis">
+                            <option value="25">25</option><option value="26">26</option>
+                            <option value="27">27</option><option value="28">28</option>
+                            <option value="29">29</option><option value="30">30</option>
+                            <option value="31">31</option><option value="32">32</option>
+                            <option value="33">33</option><option value="34">34</option>
+                            <option value="35">35</option><option value="36">36</option>
+                            <option value="37">37</option><option value="38">38</option>
+                            <option value="39">39</option><option value="40">40</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdTenis">Quantidade:</label>
+                        <input type="number" id="qtdTenis" value="1" min="1">
+                    </div>
                 </div>
-                <div class="quantidade">
-                    <label for="qtd-1"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-1" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Tênis Escolar', 80.58, 'tamanho-1', 'qtd-1')">Adicionar ao Carrinho</button>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Tenis Escolar - Uniforme Escolar', 80.58, 'tamTenis', 'qtdTenis')">
+                    Adicionar ao Carrinho
+                </button>
             </div>
+
+            <!-- 2. MEIA ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">🧦</div>
+                    <h3>Meia Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 8,50</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamMeia">Tamanho:</label>
+                        <select id="tamMeia">
+                            <option value="Infantil (23 ao 28)">Infantil (23 ao 28)</option>
+                            <option value="Juvenil (29 ao 34)">Juvenil (29 ao 34)</option>
+                            <option value="Adulto (35 ao 40)">Adulto (35 ao 40)</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdMeia">Quantidade:</label>
+                        <input type="number" id="qtdMeia" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Meia Escolar - Uniforme Escolar', 8.50, 'tamMeia', 'qtdMeia')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- 3. MOLETOM ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">🧥</div>
+                    <h3>Moletom Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 52,98</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamMoletom">Tamanho:</label>
+                        <select id="tamMoletom">
+                            <option value="2">2</option><option value="4">4</option>
+                            <option value="6">6</option><option value="8">8</option>
+                            <option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                            <option value="P">P</option><option value="M">M</option>
+                            <option value="G">G</option><option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdMoletom">Quantidade:</label>
+                        <input type="number" id="qtdMoletom" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Moletom Escolar - Uniforme Escolar', 52.98, 'tamMoletom', 'qtdMoletom')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- 4. CAMISETA ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">👕</div>
+                    <h3>Camiseta Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 30,00</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamCamiseta">Tamanho:</label>
+                        <select id="tamCamiseta">
+                            <option value="2">2</option><option value="4">4</option>
+                            <option value="6">6</option><option value="8">8</option>
+                            <option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                            <option value="P">P</option><option value="M">M</option>
+                            <option value="G">G</option><option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdCamiseta">Quantidade:</label>
+                        <input type="number" id="qtdCamiseta" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Camiseta Escolar - Uniforme Escolar', 30.00, 'tamCamiseta', 'qtdCamiseta')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- 5. CALÇA ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">👖</div>
+                    <h3>Calça Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 59,90</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamCalca">Tamanho:</label>
+                        <select id="tamCalca">
+                            <option value="2">2</option><option value="4">4</option>
+                            <option value="6">6</option><option value="8">8</option>
+                            <option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                            <option value="P">P</option><option value="M">M</option>
+                            <option value="G">G</option><option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdCalca">Quantidade:</label>
+                        <input type="number" id="qtdCalca" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Calça Escolar - Uniforme Escolar', 59.90, 'tamCalca', 'qtdCalca')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- 6. JAQUETA ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">🧥</div>
+                    <h3>Jaqueta Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 59,90</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamJaqueta">Tamanho:</label>
+                        <select id="tamJaqueta">
+                            <option value="2">2</option><option value="4">4</option>
+                            <option value="6">6</option><option value="8">8</option>
+                            <option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                            <option value="P">P</option><option value="M">M</option>
+                            <option value="G">G</option><option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdJaqueta">Quantidade:</label>
+                        <input type="number" id="qtdJaqueta" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Jaqueta Escolar - Uniforme Escolar', 59.90, 'tamJaqueta', 'qtdJaqueta')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- 7. BERMUDA ESCOLAR -->
+            <div class="produto">
+                <div>
+                    <div class="produto-img">🩳</div>
+                    <h3>Bermuda Escolar - Uniforme Escolar</h3>
+                    <div class="preco">R$ 36,14</div>
+
+                    <div class="campo-grupo">
+                        <label for="tamBermuda">Tamanho:</label>
+                        <select id="tamBermuda">
+                            <option value="2">2</option><option value="4">4</option>
+                            <option value="6">6</option><option value="8">8</option>
+                            <option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                            <option value="P">P</option><option value="M">M</option>
+                            <option value="G">G</option><option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="qtdBermuda">Quantidade:</label>
+                        <input type="number" id="qtdBermuda" value="1" min="1">
+                    </div>
+                </div>
+                <button class="btn-add" onclick="adicionarAoCarrinho('Bermuda Escolar - Uniforme Escolar', 36.14, 'tamBermuda', 'qtdBermuda')">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
         </div>
-
-        <!-- 2. MEIA ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Meia ]</div>
-                <h2>Meia Escolar</h2>
-                <p>Meia de algodão cano médio reforçada.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 8,50</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-2"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-2">
-                        <option value="P">P (23-25)</option>
-                        <option value="M">M (26-30)</option>
-                        <option value="G">G (31-37)</option>
-                        <option value="GG">GG (38-40)</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-2"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-2" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Meia Escolar', 8.50, 'tamanho-2', 'qtd-2')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
-        <!-- 3. MOLETOM ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Moletom ]</div>
-                <h2>Moletom Escolar</h2>
-                <p>Blusão de moletom macio e quente.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 52,98</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-3"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-3">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-3"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-3" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Moletom Escolar', 52.98, 'tamanho-3', 'qtd-3')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
-        <!-- 4. CAMISETA ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Camiseta ]</div>
-                <h2>Camiseta Escolar</h2>
-                <p>Camiseta 100% algodão com o brasão.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 30,00</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-4"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-4">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-4"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-4" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Camiseta Escolar', 30.00, 'tamanho-4', 'qtd-4')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
-        <!-- 5. CALÇA ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Calça ]</div>
-                <h2>Calça Escolar</h2>
-                <p>Calça de helanca com elástico no cós.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 59,90</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-5"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-5">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-5"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-5" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Calça Escolar', 59.90, 'tamanho-5', 'qtd-5')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
-        <!-- 6. JAQUETA ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Jaqueta ]</div>
-                <h2>Jaqueta Escolar</h2>
-                <p>Jaqueta em tactel com forro interno.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 59,90</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-6"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-6">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-6"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-6" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Jaqueta Escolar', 59.90, 'tamanho-6', 'qtd-6')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
-        <!-- 7. BERMUDA ESCOLAR -->
-        <div class="produto">
-            <div>
-                <div class="foto-produto-placeholder">[ Foto Bermuda ]</div>
-                <h2>Bermuda Escolar</h2>
-                <p>Bermuda leve e confortável para os dias quentes.</p>
-                <p style="font-size: 22px; color: #28a745;"><strong>R$ 36,14</strong></p>
-            </div>
-            <div>
-                <div class="tamanhos">
-                    <label for="tamanho-7"><strong>Tamanho:</strong></label>
-                    <select id="tamanho-7">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div class="quantidade">
-                    <label for="qtd-7"><strong>Quantidade:</strong></label>
-                    <input type="number" id="qtd-7" value="1" min="1">
-                </div>
-                <button onclick="adicionarAoCarrinho('Bermuda Escolar', 36.14, 'tamanho-7', 'qtd-7')">Adicionar ao Carrinho</button>
-            </div>
-        </div>
-
     </div>
 
-    <script>
-        function adicionarAoCarrinho(nomeProduto, precoUnitario, idTamanho, idQuantidade) {
-            const tamanho = document.getElementById(idTamanho).value;
-            const quantidade = document.getElementById(idQuantidade).value;
-            
-            localStorage.setItem('produtoSalvo', nomeProduto);
-            localStorage.setItem('precoSalvo', precoUnitario);
-            localStorage.setItem('tamanhoSalvo', tamanho.toUpperCase());
-            localStorage.setItem('quantidadeSalva', quantidade);
-            
-            alert(quantidade + "x " + nomeProduto + " (Tamanho " + tamanho.toUpperCase() + ") adicionado ao carrinho!");
-            window.location.href = 'carrinho.html';
-        }
-    </script>
+    <!-- FUNDO ESCURO DO DRAWER -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
 
+    <!-- GAVETA LATERAL DO CARRINHO (DRAWER) -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="drawer-header">
+            <h2>🛒 Meu Carrinho</h2>
+            <button class="btn-fechar" onclick="fecharDrawer()">&times;</button>
+        </div>
+
+        <div class="drawer-body" id="drawerItems">
+            <!-- Itens do carrinho serão desenhados aqui dinamicamente -->
+        </div>
+
+        <div class="drawer-footer">
+            <div class="total-linha">
+                <span>Total:</span>
+                <span id="drawerTotal">R$ 0,00</span>
+            </div>
+            <a href="carrinho.html" class="btn-checkout">Ver Carrinho / Finalizar</a>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT INTEGRADO -->
+    <script>
+        function abrirDrawer() {
+            document.getElementById('cartDrawer').classList.add('ativo');
+            document.getElementById('drawerOverlay').classList.add('ativo');
+            renderizarDrawer();
+        }
+
+        function fecharDrawer() {
+            document.getElementById('cartDrawer').classList.remove('ativo');
+            document.getElementById('drawerOverlay').classList.remove('ativo');
+        }
+
+        function adicionarAoCarrinho(nome, preco, idTamanho, idQtd) {
+            const elTamanho = document.getElementById(idTamanho);
+            const tamanho = elTamanho ? elTamanho.value : 'Padrão';
+            const quantidade = parseInt(document.getElementById(idQtd).value);
+
+            if (isNaN(quantidade) || quantidade <= 0) return;
+
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            const itemExistente = carrinho.find(item => item.nome === nome && item.tamanho === tamanho);
+
+            if (itemExistente) {
+                itemExistente.quantidade += quantidade;
+            } else {
+                carrinho.push({ nome, preco, tamanho, quantidade });
+            }
+
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarContadorHeader();
+            abrirDrawer();
+        }
+
+        function alterarQtdDrawer(index, mudanca) {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            if (carrinho[index]) {
+                carrinho[index].quantidade += mudanca;
+                if (carrinho[index].quantidade <= 0) {
+                    carrinho.splice(index, 1);
+                }
+                localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                renderizarDrawer();
+                atualizarContadorHeader();
+            }
+        }
+
+        function renderizarDrawer() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            const container = document.getElementById('drawerItems');
+            const totalEl = document.getElementById('drawerTotal');
+
+            if (carrinho.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #888; margin-top: 40px;">Seu carrinho está vazio.</p>';
+                totalEl.innerText = 'R$ 0,00';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+
+            carrinho.forEach((item, index) => {
+                const subtotal = item.preco * item.quantidade;
+                total += subtotal;
+
+                html += `
+                    <div class="item-drawer">
+                        <div class="item-info">
+                            <h4>${item.nome}</h4>
+                            <p>Tamanho: ${item.tamanho}</p>
+                            <p>R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
+                            <button class="btn-remover-sm" onclick="alterarQtdDrawer(${index}, -${item.quantidade})">Remover</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, -1)">-</button>
+                            <strong>${item.quantidade}</strong>
+                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            totalEl.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function atualizarContadorHeader() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            const totalItens = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+            document.getElementById('badge-total').innerText = totalItens;
+        }
+
+        window.onload = atualizarContadorHeader;
+    </script>
 </body>
 </html>
