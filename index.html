@@ -54,11 +54,15 @@
             align-items: center;
             gap: 8px;
             font-size: 15px;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         .btn-carrinho-header:hover {
             background-color: #219150;
+        }
+
+        .btn-carrinho-header:active {
+            transform: scale(0.98);
         }
 
         .badge-count {
@@ -67,6 +71,8 @@
             border-radius: 50%;
             padding: 2px 8px;
             font-size: 12px;
+            min-width: 20px;
+            text-align: center;
         }
 
         /* --- VITRINE DE PRODUTOS --- */
@@ -99,11 +105,12 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .produto:hover {
             transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
         }
 
         .produto-img {
@@ -149,6 +156,12 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: #3498db;
         }
 
         .btn-add {
@@ -179,7 +192,7 @@
             z-index: 998;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .drawer-overlay.ativo {
@@ -226,6 +239,11 @@
             font-size: 24px;
             cursor: pointer;
             color: #888;
+            transition: color 0.2s;
+        }
+
+        .btn-fechar:hover {
+            color: #333;
         }
 
         .drawer-body {
@@ -261,6 +279,11 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .qtd-btn:hover {
+            background: #cbd5e1;
         }
 
         .btn-remover-sm {
@@ -270,6 +293,12 @@
             font-size: 12px;
             cursor: pointer;
             margin-top: 4px;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        .btn-remover-sm:hover {
+            color: #c0392b;
         }
 
         .drawer-footer {
@@ -297,6 +326,7 @@
             border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
+            transition: background 0.2s;
         }
 
         .btn-checkout:hover {
@@ -308,8 +338,8 @@
 
     <!-- HEADER DA LOJA -->
     <header>
-        <a href="index.html" class="logo">✏️ Papelaria Mariana</a>
-        <button class="btn-carrinho-header" onclick="abrirDrawer()">
+        <a href="index.html" class="logo">Papelaria Mariana</a>
+        <button class="btn-carrinho-header" onclick="abrirDrawer()" aria-label="Abrir carrinho de compras">
             🛒 Carrinho <span class="badge-count" id="badge-total">0</span>
         </button>
     </header>
@@ -320,16 +350,17 @@
 
         <div class="vitrine">
 
-            <!-- 1. TENIS ESCOLAR -->
+            <!-- 1. TÊNIS ESCOLAR -->
             <div class="produto">
                 <div>
                     <div class="produto-img">👟</div>
-                    <h3>Tenis Escolar - Uniforme Escolar</h3>
+                    <h3>Tênis Escolar - Uniforme Escolar</h3>
                     <div class="preco">R$ 80,58</div>
 
                     <div class="campo-grupo">
                         <label for="tamTenis">Tamanho:</label>
                         <select id="tamTenis">
+                            <option value="23">23</option><option value="24">24</option>
                             <option value="25">25</option><option value="26">26</option>
                             <option value="27">27</option><option value="28">28</option>
                             <option value="29">29</option><option value="30">30</option>
@@ -346,7 +377,7 @@
                         <input type="number" id="qtdTenis" value="1" min="1">
                     </div>
                 </div>
-                <button class="btn-add" onclick="adicionarAoCarrinho('Tenis Escolar - Uniforme Escolar', 80.58, 'tamTenis', 'qtdTenis')">
+                <button class="btn-add" onclick="adicionarAoCarrinho('Tênis Escolar - Uniforme Escolar', 80.58, 'tamTenis', 'qtdTenis')">
                     Adicionar ao Carrinho
                 </button>
             </div>
@@ -361,9 +392,10 @@
                     <div class="campo-grupo">
                         <label for="tamMeia">Tamanho:</label>
                         <select id="tamMeia">
-                            <option value="Infantil (23 ao 28)">Infantil (23 ao 28)</option>
-                            <option value="Juvenil (29 ao 34)">Juvenil (29 ao 34)</option>
-                            <option value="Adulto (35 ao 40)">Adulto (35 ao 40)</option>
+                            <option value="P (23 ao 26)">P (23 ao 26)</option>
+                            <option value="M (27 ao 32)">M (27 ao 32)</option>
+                            <option value="G (33 ao 36)">G (33 ao 36)</option>
+                            <option value="GG (37 ao 40)">GG (37 ao 40)</option>
                         </select>
                     </div>
 
@@ -390,7 +422,7 @@
                             <option value="2">2</option><option value="4">4</option>
                             <option value="6">6</option><option value="8">8</option>
                             <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option><option value="16">16</option>
+                            <option value="14">14</option>
                             <option value="P">P</option><option value="M">M</option>
                             <option value="G">G</option><option value="GG">GG</option>
                         </select>
@@ -419,7 +451,7 @@
                             <option value="2">2</option><option value="4">4</option>
                             <option value="6">6</option><option value="8">8</option>
                             <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option><option value="16">16</option>
+                            <option value="14">14</option>
                             <option value="P">P</option><option value="M">M</option>
                             <option value="G">G</option><option value="GG">GG</option>
                         </select>
@@ -448,7 +480,7 @@
                             <option value="2">2</option><option value="4">4</option>
                             <option value="6">6</option><option value="8">8</option>
                             <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option><option value="16">16</option>
+                            <option value="14">14</option>
                             <option value="P">P</option><option value="M">M</option>
                             <option value="G">G</option><option value="GG">GG</option>
                         </select>
@@ -477,7 +509,7 @@
                             <option value="2">2</option><option value="4">4</option>
                             <option value="6">6</option><option value="8">8</option>
                             <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option><option value="16">16</option>
+                            <option value="14">14</option>
                             <option value="P">P</option><option value="M">M</option>
                             <option value="G">G</option><option value="GG">GG</option>
                         </select>
@@ -506,7 +538,7 @@
                             <option value="2">2</option><option value="4">4</option>
                             <option value="6">6</option><option value="8">8</option>
                             <option value="10">10</option><option value="12">12</option>
-                            <option value="14">14</option><option value="16">16</option>
+                            <option value="14">14</option>
                             <option value="P">P</option><option value="M">M</option>
                             <option value="G">G</option><option value="GG">GG</option>
                         </select>
@@ -529,10 +561,10 @@
     <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
 
     <!-- GAVETA LATERAL DO CARRINHO (DRAWER) -->
-    <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Seu carrinho de compras">
         <div class="drawer-header">
             <h2>🛒 Meu Carrinho</h2>
-            <button class="btn-fechar" onclick="fecharDrawer()">&times;</button>
+            <button class="btn-fechar" onclick="fecharDrawer()" aria-label="Fechar carrinho">&times;</button>
         </div>
 
         <div class="drawer-body" id="drawerItems">
@@ -550,6 +582,11 @@
 
     <!-- JAVASCRIPT INTEGRADO -->
     <script>
+        // Formatador BRL nativo
+        const formatarMoeda = (valor) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+        };
+
         function abrirDrawer() {
             document.getElementById('cartDrawer').classList.add('ativo');
             document.getElementById('drawerOverlay').classList.add('ativo');
@@ -561,10 +598,18 @@
             document.getElementById('drawerOverlay').classList.remove('ativo');
         }
 
+        // Fechar gaveta com tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                fecharDrawer();
+            }
+        });
+
         function adicionarAoCarrinho(nome, preco, idTamanho, idQtd) {
             const elTamanho = document.getElementById(idTamanho);
+            const elQtd = document.getElementById(idQtd);
             const tamanho = elTamanho ? elTamanho.value : 'Padrão';
-            const quantidade = parseInt(document.getElementById(idQtd).value);
+            const quantidade = parseInt(elQtd ? elQtd.value : 1);
 
             if (isNaN(quantidade) || quantidade <= 0) return;
 
@@ -578,6 +623,10 @@
             }
 
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            
+            // Resetar a quantidade para 1 após adicionar
+            if (elQtd) elQtd.value = 1;
+
             atualizarContadorHeader();
             abrirDrawer();
         }
@@ -602,7 +651,7 @@
 
             if (carrinho.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #888; margin-top: 40px;">Seu carrinho está vazio.</p>';
-                totalEl.innerText = 'R$ 0,00';
+                totalEl.innerText = formatarMoeda(0);
                 return;
             }
 
@@ -618,20 +667,20 @@
                         <div class="item-info">
                             <h4>${item.nome}</h4>
                             <p>Tamanho: ${item.tamanho}</p>
-                            <p>R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
+                            <p>${formatarMoeda(item.preco)}</p>
                             <button class="btn-remover-sm" onclick="alterarQtdDrawer(${index}, -${item.quantidade})">Remover</button>
                         </div>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, -1)">-</button>
+                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, -1)" aria-label="Diminuir quantidade">-</button>
                             <strong>${item.quantidade}</strong>
-                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, 1)">+</button>
+                            <button class="qtd-btn" onclick="alterarQtdDrawer(${index}, 1)" aria-label="Aumentar quantidade">+</button>
                         </div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
-            totalEl.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            totalEl.innerText = formatarMoeda(total);
         }
 
         function atualizarContadorHeader() {
