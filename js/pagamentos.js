@@ -1,513 +1,525 @@
-/*
- * ============================================
- * PAGAMENTO / CHECKOUT
- * PAPELARIA MARIANA
- * ============================================
- */
+document.addEventListener("DOMContentLoaded", function () {
 
-const CHAVE_CLIENTE = "cliente";
-const CHAVE_PEDIDO = "ultimoPedido";
+    console.log("Pagamento.js carregado.");
+
+    // ============================================
+    // ELEMENTOS
+    // ============================================
+
+    const nomeElemento =
+        document.getElementById("cliente-nome");
+
+    const emailElemento =
+        document.getElementById("cliente-email");
+
+    const telefoneElemento =
+        document.getElementById("cliente-telefone");
+
+    const enderecoElemento =
+        document.getElementById("cliente-endereco");
+
+    const listaResumo =
+        document.getElementById("lista-resumo");
+
+    const valorFinal =
+        document.getElementById("valor-final");
+
+    const mensagem =
+        document.getElementById("mensagem");
+
+    const btnConfirmar =
+        document.getElementById("btnConfirmar");
 
 
-/*
- * Recupera o cliente.
- */
+    // ============================================
+    // FORMATAR DINHEIRO
+    // ============================================
 
-function obterClientePagamento() {
+    function formatarMoeda(valor) {
 
-    try {
+        return new Intl.NumberFormat(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        ).format(valor);
 
-        return JSON.parse(
-            localStorage.getItem(
-                CHAVE_CLIENTE
-            )
-        ) || null;
-
-    } catch (erro) {
-
-        console.error(
-            "Erro ao carregar cliente:",
-            erro
-        );
-
-        return null;
     }
 
-}
 
+    // ============================================
+    // LER CARRINHO
+    // ============================================
 
-/*
- * Recupera o carrinho.
- */
+    function obterCarrinho() {
 
-function obterCarrinhoPagamento() {
+        try {
 
-    try {
+            const dados =
+                localStorage.getItem("carrinho");
 
-        return JSON.parse(
-            localStorage.getItem(
-                "carrinho"
-            )
-        ) || [];
+            if (!dados) {
+                return [];
+            }
 
-    } catch (erro) {
+            const carrinho =
+                JSON.parse(dados);
 
-        console.error(
-            "Erro ao carregar carrinho:",
-            erro
-        );
+            if (!Array.isArray(carrinho)) {
+                return [];
+            }
 
-        return [];
+            return carrinho;
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao ler carrinho:",
+                erro
+            );
+
+            return [];
+
+        }
+
     }
 
-}
+
+    // ============================================
+    // LER CLIENTE
+    // ============================================
+
+    function obterCliente() {
+
+        try {
+
+            const dados =
+                localStorage.getItem("cliente");
+
+            if (!dados) {
+                return null;
+            }
+
+            return JSON.parse(dados);
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao ler cliente:",
+                erro
+            );
+
+            return null;
+
+        }
+
+    }
 
 
-/*
- * Calcula o total.
- */
+    // ============================================
+    // CLIENTE
+    // ============================================
 
-function calcularTotalPagamento(
-    carrinho
-) {
+    const cliente =
+        obterCliente();
 
-    return carrinho.reduce(
-        (total, item) =>
-            total +
-            (
-                item.preco *
-                item.quantidade
-            ),
-        0
+
+    // ============================================
+    // CARRINHO
+    // ============================================
+
+    const carrinho =
+        obterCarrinho();
+
+
+    console.log(
+        "Cliente encontrado:",
+        cliente
     );
 
-}
+    console.log(
+        "Carrinho encontrado:",
+        carrinho
+    );
 
 
-/*
- * Gera número temporário
- * para o pedido.
- */
+    // ============================================
+    // VERIFICA CLIENTE
+    // ============================================
 
-function gerarNumeroPedido() {
+    if (!cliente) {
 
-    const agora =
-        Date.now()
-            .toString()
-            .slice(-8);
-
-    return "PM-" + agora;
-
-}
-
-
-/*
- * Carrega os dados do cliente
- * na tela.
- */
-
-function carregarClientePagamento(
-    cliente
-) {
-
-    const nome =
-        document.getElementById(
-            "cliente-nome"
+        alert(
+            "Os dados do cliente não foram encontrados. Você será enviado para o cadastro."
         );
 
-    const email =
-        document.getElementById(
-            "cliente-email"
-        );
+        window.location.href =
+            "cadastro.html";
 
-    const endereco =
-        document.getElementById(
-            "cliente-endereco"
-        );
-
-    if (nome) {
-        nome.innerText =
-            cliente.nome;
-    }
-
-    if (email) {
-        email.innerText =
-            cliente.email;
-    }
-
-    if (endereco) {
-        endereco.innerText =
-            cliente.endereco;
-    }
-
-}
-
-
-/*
- * Renderiza os produtos
- * no resumo do pedido.
- */
-
-function renderizarResumoPagamento(
-    carrinho
-) {
-
-    const lista =
-        document.getElementById(
-            "lista-resumo"
-        );
-
-    if (!lista) {
         return;
+
     }
 
-    lista.innerHTML = "";
 
-    carrinho.forEach(
-        item => {
+    // ============================================
+    // VERIFICA CARRINHO
+    // ============================================
 
-            const subtotal =
-                item.preco *
-                item.quantidade;
+    if (carrinho.length === 0) {
 
-            const elemento =
-                document.createElement(
-                    "div"
-                );
+        alert(
+            "Seu carrinho está vazio."
+        );
 
-            elemento.className =
-                "item-resumo";
+        window.location.href =
+            "index.html";
 
-            elemento.innerHTML = `
+        return;
 
-                <span>
+    }
 
-                    ${item.nome}
 
-                    <br>
+    // ============================================
+    // MOSTRAR CLIENTE
+    // ============================================
 
-                    Tamanho:
-                    ${item.tamanho}
+    nomeElemento.textContent =
+        cliente.nome || "Não informado";
 
-                    <br>
 
-                    Quantidade:
-                    ${item.quantidade}
+    emailElemento.textContent =
+        cliente.email || "Não informado";
 
-                </span>
+
+    telefoneElemento.textContent =
+        cliente.telefone || "Não informado";
+
+
+    // ============================================
+    // ENDEREÇO
+    // ============================================
+
+    let enderecoTexto = "";
+
+
+    /*
+     * Compatível com o cadastro antigo,
+     * onde endereco era uma string.
+     */
+
+    if (
+        typeof cliente.endereco === "string"
+    ) {
+
+        enderecoTexto =
+            cliente.endereco;
+
+    }
+
+
+    /*
+     * Compatível com o novo cadastro,
+     * onde endereco é um objeto.
+     */
+
+    else if (
+        cliente.endereco &&
+        typeof cliente.endereco === "object"
+    ) {
+
+        const endereco =
+            cliente.endereco;
+
+
+        if (endereco.logradouro) {
+
+            enderecoTexto +=
+                endereco.logradouro;
+
+        }
+
+
+        if (endereco.numero) {
+
+            enderecoTexto +=
+                ", " + endereco.numero;
+
+        }
+
+
+        if (endereco.complemento) {
+
+            enderecoTexto +=
+                " - " +
+                endereco.complemento;
+
+        }
+
+
+        if (endereco.bairro) {
+
+            enderecoTexto +=
+                " - " +
+                endereco.bairro;
+
+        }
+
+
+        if (endereco.cidade) {
+
+            enderecoTexto +=
+                " - " +
+                endereco.cidade;
+
+        }
+
+
+        if (endereco.estado) {
+
+            enderecoTexto +=
+                " - " +
+                endereco.estado;
+
+        }
+
+
+        if (endereco.cep) {
+
+            enderecoTexto +=
+                " - CEP: " +
+                endereco.cep;
+
+        }
+
+    }
+
+
+    enderecoElemento.textContent =
+        enderecoTexto || "Não informado";
+
+
+    // ============================================
+    // CALCULAR TOTAL
+    // ============================================
+
+    let total =
+        0;
+
+
+    // ============================================
+    // MOSTRAR PRODUTOS
+    // ============================================
+
+    listaResumo.innerHTML = "";
+
+
+    carrinho.forEach(function (item) {
+
+        const preco =
+            Number(item.preco) || 0;
+
+
+        const quantidade =
+            Number(item.quantidade) || 1;
+
+
+        const subtotal =
+            preco * quantidade;
+
+
+        total +=
+            subtotal;
+
+
+        const elemento =
+            document.createElement("div");
+
+
+        elemento.className =
+            "item-resumo";
+
+
+        elemento.innerHTML = `
+
+            <div class="item-resumo-info">
 
                 <strong>
-
-                    ${formatarMoeda(
-                        subtotal
-                    )}
-
+                    ${item.nome || "Produto"}
                 </strong>
 
-            `;
+                <span>
+                    Tamanho:
+                    ${item.tamanho || "Não informado"}
+                </span>
 
-            lista.appendChild(
-                elemento
+                <br>
+
+                <span>
+                    Quantidade:
+                    ${quantidade}
+                </span>
+
+            </div>
+
+            <div class="item-resumo-preco">
+
+                ${formatarMoeda(subtotal)}
+
+            </div>
+
+        `;
+
+
+        listaResumo.appendChild(
+            elemento
+        );
+
+    });
+
+
+    // ============================================
+    // MOSTRAR TOTAL
+    // ============================================
+
+    valorFinal.textContent =
+        formatarMoeda(total);
+
+
+    console.log(
+        "Total do pedido:",
+        total
+    );
+
+
+    // ============================================
+    // CONFIRMAR PEDIDO
+    // ============================================
+
+    btnConfirmar.addEventListener(
+        "click",
+        function () {
+
+            const formaPagamento =
+                document.querySelector(
+                    'input[name="forma_pagamento"]:checked'
+                );
+
+
+            if (!formaPagamento) {
+
+                mostrarMensagem(
+                    "Escolha uma forma de pagamento.",
+                    "erro"
+                );
+
+                return;
+
+            }
+
+
+            // ====================================
+            // NÚMERO DO PEDIDO
+            // ====================================
+
+            const numeroPedido =
+                "PM-" +
+                Date.now()
+                    .toString()
+                    .slice(-8);
+
+
+            // ====================================
+            // PEDIDO
+            // ====================================
+
+            const pedido = {
+
+                numero:
+                    numeroPedido,
+
+                cliente:
+                    cliente,
+
+                itens:
+                    carrinho,
+
+                total:
+                    total,
+
+                pagamento:
+                    formaPagamento.value,
+
+                data:
+                    new Date().toISOString(),
+
+                status:
+                    "Aguardando pagamento"
+
+            };
+
+
+            // ====================================
+            // SALVAR PEDIDO
+            // ====================================
+
+            localStorage.setItem(
+                "ultimoPedido",
+                JSON.stringify(pedido)
             );
+
+
+            // ====================================
+            // MENSAGEM
+            // ====================================
+
+            mostrarMensagem(
+                "Pedido criado com sucesso!",
+                "sucesso"
+            );
+
+
+            btnConfirmar.disabled =
+                true;
+
+
+            btnConfirmar.textContent =
+                "Pedido Confirmado";
+
+
+            console.log(
+                "Pedido criado:",
+                pedido
+            );
+
+
+            /*
+             * Por enquanto não vamos apagar
+             * o carrinho.
+             *
+             * Primeiro vamos confirmar que
+             * toda a sequência está funcionando.
+             */
 
         }
     );
 
-}
 
+    // ============================================
+    // MENSAGEM
+    // ============================================
 
-/*
- * Atualiza o valor total
- * na tela.
- */
-
-function atualizarTotalPagamento(
-    carrinho
-) {
-
-    const elemento =
-        document.getElementById(
-            "valor-final"
-        );
-
-    if (!elemento) {
-        return;
-    }
-
-    const total =
-        calcularTotalPagamento(
-            carrinho
-        );
-
-    elemento.innerText =
-        formatarMoeda(total);
-
-}
-
-
-/*
- * Cria o objeto do pedido.
- */
-
-function criarPedido(
-    cliente,
-    carrinho,
-    formaPagamento
-) {
-
-    const total =
-        calcularTotalPagamento(
-            carrinho
-        );
-
-    return {
-
-        numero:
-            gerarNumeroPedido(),
-
-        cliente: {
-
-            nome:
-                cliente.nome,
-
-            email:
-                cliente.email,
-
-            endereco:
-                cliente.endereco
-
-        },
-
-        itens:
-            carrinho,
-
-        total:
-            total,
-
-        pagamento:
-            formaPagamento,
-
-        data:
-            new Date().toISOString(),
-
-        status:
-            "Aguardando pagamento"
-
-    };
-
-}
-
-
-/*
- * Finaliza a compra.
- */
-
-function concluirCompra() {
-
-    const carrinho =
-        obterCarrinhoPagamento();
-
-    const cliente =
-        obterClientePagamento();
-
-    /*
-     * Validação do carrinho.
-     */
-
-    if (carrinho.length === 0) {
-
-        alert(
-            "Seu carrinho está vazio."
-        );
-
-        window.location.href =
-            "index.html";
-
-        return;
-    }
-
-
-    /*
-     * Validação do cliente.
-     */
-
-    if (!cliente) {
-
-        alert(
-            "Os dados do cliente não foram encontrados."
-        );
-
-        window.location.href =
-            "cadastro.html";
-
-        return;
-    }
-
-
-    /*
-     * Forma de pagamento.
-     */
-
-    const campoPagamento =
-        document.querySelector(
-            'input[name="forma_pagamento"]:checked'
-        );
-
-    if (!campoPagamento) {
-
-        alert(
-            "Selecione uma forma de pagamento."
-        );
-
-        return;
-    }
-
-    const formaPagamento =
-        campoPagamento.value;
-
-
-    /*
-     * Cria pedido.
-     */
-
-    const pedido =
-        criarPedido(
-            cliente,
-            carrinho,
-            formaPagamento
-        );
-
-
-    /*
-     * Salva o último pedido
-     * temporariamente.
-     */
-
-    localStorage.setItem(
-        CHAVE_PEDIDO,
-        JSON.stringify(pedido)
-    );
-
-
-    /*
-     * IMPORTANTE:
-     *
-     * Aqui futuramente vamos chamar
-     * o backend e o gateway de pagamento.
-     */
-
-    if (
-        formaPagamento === "pix"
+    function mostrarMensagem(
+        texto,
+        tipo
     ) {
 
-        alert(
-            "Pedido " +
-            pedido.numero +
-            " criado!\n\n" +
-            "PIX selecionado.\n\n" +
-            "A geração do PIX real será adicionada na integração com o gateway."
-        );
+        mensagem.textContent =
+            texto;
 
-    } else {
-
-        alert(
-            "Pedido " +
-            pedido.numero +
-            " criado!\n\n" +
-            "Cartão selecionado.\n\n" +
-            "A cobrança real será adicionada na integração com o gateway."
-        );
+        mensagem.className =
+            "mensagem " + tipo;
 
     }
 
-
-    /*
-     * Limpa apenas o carrinho.
-     */
-
-    localStorage.removeItem(
-        "carrinho"
-    );
-
-
-    /*
-     * Volta para a loja.
-     */
-
-    window.location.href =
-        "index.html";
-
-}
-
-
-/*
- * Inicialização do checkout.
- */
-
-function iniciarPagamento() {
-
-    const carrinho =
-        obterCarrinhoPagamento();
-
-    const cliente =
-        obterClientePagamento();
-
-
-    /*
-     * Verifica carrinho.
-     */
-
-    if (carrinho.length === 0) {
-
-        alert(
-            "Seu carrinho está vazio."
-        );
-
-        window.location.href =
-            "index.html";
-
-        return;
-    }
-
-
-    /*
-     * Verifica cliente.
-     */
-
-    if (!cliente) {
-
-        alert(
-            "Precisamos dos seus dados para continuar."
-        );
-
-        window.location.href =
-            "cadastro.html";
-
-        return;
-    }
-
-
-    carregarClientePagamento(
-        cliente
-    );
-
-    renderizarResumoPagamento(
-        carrinho
-    );
-
-    atualizarTotalPagamento(
-        carrinho
-    );
-
-}
-
-
-/*
- * Executa quando o HTML estiver carregado.
- */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    iniciarPagamento
-);
-
+});

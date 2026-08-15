@@ -6,61 +6,34 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Papelaria Mariana - Uniformes Escolares</title>
 </head>
-
 <body>
 
 <header>
     <a href="index.html" class="logo">Papelaria Mariana</a>
-
-    <button class="btn-carrinho-header"
-            onclick="abrirDrawer()"
-            aria-label="Abrir carrinho">
-        🛒 Carrinho
-        <span class="badge-count" id="badge-total">0</span>
+    <button class="btn-carrinho-header" onclick="abrirDrawer()" aria-label="Abrir carrinho de compras">
+        🛒 Carrinho <span class="badge-count" id="badge-total">0</span>
     </button>
 </header>
 
 <div class="container">
-
     <h1 class="titulo-pagina">Uniformes Escolares</h1>
-
     <div class="vitrine" id="vitrine"></div>
-
 </div>
 
-<div class="drawer-overlay"
-     id="drawerOverlay"
-     onclick="fecharDrawer()">
-</div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
 
-<div class="cart-drawer"
-     id="cartDrawer"
-     role="dialog"
-     aria-modal="true">
-
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Seu carrinho de compras">
     <div class="drawer-header">
         <h2>🛒 Meu Carrinho</h2>
-
-        <button class="btn-fechar"
-                onclick="fecharDrawer()">
-            &times;
-        </button>
+        <button class="btn-fechar" onclick="fecharDrawer()" aria-label="Fechar carrinho">&times;</button>
     </div>
-
     <div class="drawer-body" id="drawerItems"></div>
-
     <div class="drawer-footer">
-
         <div class="total-linha">
             <span>Total:</span>
             <span id="drawerTotal">R$ 0,00</span>
         </div>
-
-        <a href="carrinho.html"
-           class="btn-checkout">
-            Ver Carrinho / Finalizar
-        </a>
-
+        <a href="carrinho.html" class="btn-checkout">Ver Carrinho / Finalizar</a>
     </div>
 </div>
 

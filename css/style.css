@@ -1,8 +1,12 @@
+/* ============================================
+   PAPELARIA MARIANA - ESTILOS GERAIS
+============================================ */
+
 * {
     box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -10,9 +14,34 @@ body {
     color: #333;
 }
 
-/* =========================
-   HEADER
-========================= */
+body.pagina-formulario {
+    min-height: 100vh;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body.pagina-carrinho {
+    padding: 30px 20px;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+/* HEADER */
+
+body:not(.pagina-formulario):not(.pagina-carrinho) {
+    padding-top: 90px;
+}
 
 header {
     position: fixed;
@@ -26,7 +55,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 0 5%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 100;
 }
 
@@ -49,11 +78,15 @@ header {
     align-items: center;
     gap: 8px;
     font-size: 15px;
-    transition: 0.2s;
+    transition: background 0.2s, transform 0.1s;
 }
 
 .btn-carrinho-header:hover {
     background-color: #219150;
+}
+
+.btn-carrinho-header:active {
+    transform: scale(0.98);
 }
 
 .badge-count {
@@ -66,14 +99,12 @@ header {
     text-align: center;
 }
 
-/* =========================
-   CONTAINER
-========================= */
+/* VITRINE */
 
 .container {
     max-width: 1150px;
-    margin: 0 auto;
-    padding: 100px 20px 40px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
 }
 
 .titulo-pagina {
@@ -82,10 +113,6 @@ header {
     color: #2c3e50;
     font-size: 24px;
 }
-
-/* =========================
-   PRODUTOS
-========================= */
 
 .vitrine {
     display: flex;
@@ -97,18 +124,18 @@ header {
 .produto {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     padding: 20px;
     width: 320px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .produto:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
 }
 
 .produto-img {
@@ -148,28 +175,30 @@ header {
     margin-bottom: 12px;
 }
 
-.campo-grupo label {
+.campo-grupo label,
+.formulario label {
     display: block;
     font-size: 13px;
     color: #666;
     margin-bottom: 4px;
+    font-weight: bold;
 }
 
 select,
 input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.formulario input {
     width: 100%;
-    padding: 9px 10px;
+    padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
     outline: none;
+    transition: border-color 0.2s;
 }
 
 select:focus,
-input:focus {
+input[type="number"]:focus,
+.formulario input:focus {
     border-color: #3498db;
 }
 
@@ -183,24 +212,25 @@ input:focus {
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    transition: background 0.2s;
 }
 
 .btn-add:hover {
     background-color: #2980b9;
 }
 
-/* =========================
-   DRAWER DO CARRINHO
-========================= */
+/* DRAWER */
 
 .drawer-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
     z-index: 998;
     opacity: 0;
     visibility: hidden;
-    transition: 0.3s;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .drawer-overlay.ativo {
@@ -217,7 +247,7 @@ input:focus {
     height: 100vh;
     background: white;
     z-index: 999;
-    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+    box-shadow: -4px 0 15px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
     transition: right 0.3s ease-in-out;
@@ -249,6 +279,10 @@ input:focus {
     color: #888;
 }
 
+.btn-fechar:hover {
+    color: #333;
+}
+
 .drawer-body {
     flex: 1;
     padding: 20px;
@@ -259,9 +293,9 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding: 12px 0;
     border-bottom: 1px solid #eee;
-    gap: 10px;
 }
 
 .item-info {
@@ -276,13 +310,7 @@ input:focus {
 .item-info p {
     font-size: 12px;
     color: #777;
-    margin-top: 3px;
-}
-
-.qtd-controle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    margin-top: 2px;
 }
 
 .qtd-btn {
@@ -321,8 +349,7 @@ input:focus {
     color: #2c3e50;
 }
 
-.btn-checkout,
-.botao-principal {
+.btn-checkout {
     display: block;
     width: 100%;
     background: #27ae60;
@@ -332,47 +359,93 @@ input:focus {
     border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
-    border: none;
-    cursor: pointer;
 }
 
-.btn-checkout:hover,
-.botao-principal:hover {
-    background: #219150;
-}
+/* FORMULÁRIOS */
 
-/* =========================
-   PÁGINAS INTERNAS
-========================= */
-
-.pagina-interna {
-    min-height: 100vh;
-    padding: 30px 20px;
-    background-color: #f4f4f9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.pagina-interna h1 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.caixa {
-    background-color: white;
+.formulario,
+.pagamento-box {
+    background: white;
     border: 1px solid #ddd;
     padding: 30px;
     width: 100%;
-    max-width: 800px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* =========================
-   CARRINHO
-========================= */
+.formulario {
+    max-width: 450px;
+}
+
+.pagamento-box {
+    max-width: 500px;
+}
+
+.formulario h2,
+.cliente h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.grupo-input {
+    margin-bottom: 15px;
+}
+
+.formulario input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.observacao {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.formulario button,
+.pagamento-box > button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.formulario button:hover,
+.pagamento-box > button:hover {
+    background-color: #218838;
+}
+
+.voltar {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #0056b3;
+    text-decoration: none;
+}
+
+/* CARRINHO */
+
+.pagina-carrinho .container {
+    width: 100%;
+    max-width: 800px;
+}
+
+.pagina-carrinho h1 {
+    margin-bottom: 25px;
+}
+
+.carrinho {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
 
 .item-carrinho {
     display: flex;
@@ -388,7 +461,7 @@ input:focus {
 }
 
 .detalhes-produto h3 {
-    margin-bottom: 7px;
+    margin: 0 0 7px;
     font-size: 18px;
     color: #333;
 }
@@ -416,18 +489,12 @@ input:focus {
     font-weight: bold;
 }
 
-.remover {
-    background: none !important;
+.controle .remover {
+    background: none;
     color: #e74c3c;
-    width: auto !important;
+    width: auto;
     text-decoration: underline;
     margin-left: 8px;
-}
-
-.preco-item {
-    font-size: 18px;
-    font-weight: bold;
-    color: #28a745;
 }
 
 .total {
@@ -444,6 +511,11 @@ input:focus {
     color: #28a745;
 }
 
+.botoes {
+    margin-top: 20px;
+}
+
+.botao-principal,
 .botao-secundario {
     display: block;
     width: 100%;
@@ -454,6 +526,19 @@ input:focus {
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+}
+
+.botao-principal {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.botao-principal:hover {
+    background-color: #218838;
+}
+
+.botao-secundario {
     background-color: transparent;
     color: #0056b3;
     border: 1px solid #0056b3;
@@ -474,64 +559,13 @@ input:focus {
     text-decoration: none;
 }
 
-/* =========================
-   FORMULÁRIO
-========================= */
-
-.formulario {
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 30px;
-    width: 100%;
-    max-width: 450px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.formulario h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-
-.grupo-input {
-    margin-bottom: 15px;
-}
-
-.grupo-input label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-.observacao {
-    font-size: 12px;
-    color: #777;
-    margin-top: 5px;
-}
-
-.voltar {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    color: #0056b3;
-    text-decoration: none;
-}
-
-/* =========================
-   PAGAMENTO
-========================= */
+/* PAGAMENTO */
 
 .cliente {
     background: #f8f9fa;
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
-}
-
-.cliente h3 {
-    margin-bottom: 10px;
-    color: #2c3e50;
 }
 
 .cliente p {
@@ -567,9 +601,9 @@ input:focus {
 .item-resumo {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     padding: 8px 0;
     border-bottom: 1px solid #eee;
-    gap: 15px;
     font-size: 14px;
 }
 
@@ -581,6 +615,7 @@ input:focus {
     cursor: pointer;
     display: flex;
     align-items: center;
+    gap: 5px;
 }
 
 .opcao-pagamento:hover {
@@ -588,35 +623,20 @@ input:focus {
 }
 
 .opcao-pagamento input {
-    margin-right: 10px;
+    margin-right: 5px;
     transform: scale(1.3);
 }
 
-/* =========================
-   RESPONSIVIDADE
-========================= */
+/* RESPONSIVO */
 
 @media (max-width: 600px) {
-
     header {
         padding: 0 15px;
     }
 
-    .logo {
-        font-size: 17px;
-    }
-
-    .btn-carrinho-header {
-        padding: 9px 12px;
-    }
-
-    .container {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
     .produto {
         width: 100%;
+        max-width: 360px;
     }
 
     .item-carrinho {
@@ -624,11 +644,17 @@ input:focus {
         align-items: flex-start;
     }
 
-    .preco-item {
+    .item-carrinho > .preco {
         align-self: flex-end;
     }
 
-    .caixa {
-        padding: 20px;
+    .item-resumo {
+        flex-direction: column;
+    }
+
+    .cart-drawer {
+        width: 100%;
+        max-width: 100%;
+        right: -100%;
     }
 }

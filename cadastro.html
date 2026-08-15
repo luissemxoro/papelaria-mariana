@@ -2,286 +2,211 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+
     <title>Papelaria Mariana - Cadastro</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            padding: 30px 20px;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #333;
-        }
-
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-        }
-
-        .formulario {
-            background-color: white;
-            border: 1px solid #ddd;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .formulario h2 {
-            color: #2c3e50;
-            margin-top: 0;
-        }
-
-        .grupo-input {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-
-        .observacao {
-            font-size: 12px;
-            color: #777;
-            margin-top: 5px;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .voltar {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #0056b3;
-            text-decoration: none;
-        }
-
-    </style>
-
 </head>
 
-<body>
+<body class="pagina-formulario">
 
-<h1>Crie sua conta</h1>
+    <main class="formulario-container">
 
-<div class="formulario">
+        <h1>Crie sua conta</h1>
 
-    <h2>Dados para Entrega</h2>
+        <p class="subtitulo">
+            Preencha seus dados para continuar sua compra.
+        </p>
 
-    <form id="formCadastro">
+        <form id="formCadastro" class="formulario" novalidate>
 
-        <div class="grupo-input">
+            <h2>Dados pessoais</h2>
 
-            <label for="nome">
-                Nome Completo:
-            </label>
-
-            <input
-                type="text"
-                id="nome"
-                placeholder="Ex: João da Silva"
-                required
-            >
-
-        </div>
-
-        <div class="grupo-input">
-
-            <label for="email">
-                E-mail:
-            </label>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="seuemail@exemplo.com"
-                required
-            >
-
-        </div>
-
-        <div class="grupo-input">
-
-            <label for="senha">
-                Crie uma Senha:
-            </label>
-
-            <input
-                type="password"
-                id="senha"
-                placeholder="Mínimo 6 caracteres"
-                minlength="6"
-                required
-            >
-
-            <div class="observacao">
-                A senha deve possuir pelo menos 6 caracteres.
+            <div class="campo">
+                <label for="nome">Nome completo</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Digite seu nome completo"
+                    autocomplete="name"
+                    required
+                >
+                <small class="erro" id="erroNome"></small>
             </div>
 
-        </div>
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Digite seu e-mail"
+                    autocomplete="email"
+                    required
+                >
+                <small class="erro" id="erroEmail"></small>
+            </div>
 
-        <div class="grupo-input">
+            <div class="campo">
+                <label for="telefone">Telefone</label>
+                <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    placeholder="(11) 99999-9999"
+                    autocomplete="tel"
+                    maxlength="15"
+                    required
+                >
+                <small class="erro" id="erroTelefone"></small>
+            </div>
 
-            <label for="endereco">
-                Endereço de Entrega:
-            </label>
+            <h2>Endereço</h2>
 
-            <input
-                type="text"
-                id="endereco"
-                placeholder="Rua, número e bairro"
-                required
-            >
+            <div class="campo">
+                <label for="cep">CEP</label>
+                <input
+                    type="text"
+                    id="cep"
+                    name="cep"
+                    placeholder="00000-000"
+                    autocomplete="postal-code"
+                    maxlength="9"
+                    required
+                >
+                <small class="erro" id="erroCep"></small>
+            </div>
 
-        </div>
+            <div class="campo">
+                <label for="logradouro">Endereço</label>
+                <input
+                    type="text"
+                    id="logradouro"
+                    name="logradouro"
+                    placeholder="Rua, Avenida..."
+                    autocomplete="street-address"
+                    required
+                >
+                <small class="erro" id="erroLogradouro"></small>
+            </div>
 
-        <button type="submit">
-            Continuar para Pagamento
+            <div class="linha-campos">
+
+                <div class="campo">
+                    <label for="numero">Número</label>
+                    <input
+                        type="text"
+                        id="numero"
+                        name="numero"
+                        placeholder="Número"
+                        required
+                    >
+                    <small class="erro" id="erroNumero"></small>
+                </div>
+
+                <div class="campo">
+                    <label for="complemento">Complemento</label>
+                    <input
+                        type="text"
+                        id="complemento"
+                        name="complemento"
+                        placeholder="Apto, bloco..."
+                    >
+                </div>
+
+            </div>
+
+            <div class="linha-campos">
+
+                <div class="campo">
+                    <label for="bairro">Bairro</label>
+                    <input
+                        type="text"
+                        id="bairro"
+                        name="bairro"
+                        placeholder="Bairro"
+                        autocomplete="address-level3"
+                        required
+                    >
+                    <small class="erro" id="erroBairro"></small>
+                </div>
+
+                <div class="campo">
+                    <label for="cidade">Cidade</label>
+                    <input
+                        type="text"
+                        id="cidade"
+                        name="cidade"
+                        placeholder="Cidade"
+                        autocomplete="address-level2"
+                        required
+                    >
+                    <small class="erro" id="erroCidade"></small>
+                </div>
+
+            </div>
+
+            <div class="campo">
+                <label for="estado">Estado</label>
+
+                <select
+                    id="estado"
+                    name="estado"
+                    autocomplete="address-level1"
+                    required
+                >
+                    <option value="">Selecione o estado</option>
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                </select>
+
+                <small class="erro" id="erroEstado"></small>
+            </div>
+
+            <div id="mensagemCadastro" class="mensagem"></div>
+
+            <button type="submit" class="btn-continuar">
+                Continuar para pagamento
+            </button>
+
+        </form>
+
+        <button type="button" id="btnVoltar" class="btn-voltar">
+            Voltar para o carrinho
         </button>
 
-    </form>
+    </main>
 
-    <a href="carrinho.html"
-       class="voltar">
+    <script src="js/cadastro.js"></script>
 
-        ← Voltar para o carrinho
-
-    </a>
-
-</div>
-
-<script>
-
-function obterCarrinho() {
-
-    return JSON.parse(
-        localStorage.getItem("carrinho")
-    ) || [];
-
-}
-
-document
-    .getElementById("formCadastro")
-    .addEventListener(
-        "submit",
-        function(event) {
-
-            event.preventDefault();
-
-            const carrinho =
-                obterCarrinho();
-
-            if (carrinho.length === 0) {
-
-                alert(
-                    "Seu carrinho está vazio."
-                );
-
-                window.location.href =
-                    "index.html";
-
-                return;
-            }
-
-            const nome =
-                document
-                    .getElementById("nome")
-                    .value
-                    .trim();
-
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim();
-
-            const senha =
-                document
-                    .getElementById("senha")
-                    .value;
-
-            const endereco =
-                document
-                    .getElementById("endereco")
-                    .value
-                    .trim();
-
-            if (senha.length < 6) {
-
-                alert(
-                    "A senha precisa ter pelo menos 6 caracteres."
-                );
-
-                return;
-            }
-
-            const cliente = {
-
-                nome: nome,
-                email: email,
-                senha: senha,
-                endereco: endereco
-
-            };
-
-            localStorage.setItem(
-                "cliente",
-                JSON.stringify(cliente)
-            );
-
-            window.location.href =
-                "pagamento.html";
-
-        }
-    );
-
-</script>
-<script src="js/cadastro.js"></script>
 </body>
+
 </html>

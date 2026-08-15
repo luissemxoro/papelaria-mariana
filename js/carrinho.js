@@ -1,482 +1,239 @@
-/*
- * ============================================
- * SISTEMA DE CARRINHO
- * PAPELARIA MARIANA
- * ============================================
- */
+/* ============================================
+   CARRINHO
+============================================ */
 
-const CHAVE_CARRINHO = "carrinho";
-
-
-/*
- * Retorna o carrinho salvo no navegador.
- */
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    }).format(Number(valor) || 0);
+}
 
 function obterCarrinho() {
-
     try {
-
-        return JSON.parse(
-            localStorage.getItem(CHAVE_CARRINHO)
-        ) || [];
-
-    } catch (erro) {
-
-        console.error(
-            "Erro ao carregar carrinho:",
-            erro
-        );
-
+        const dados = JSON.parse(localStorage.getItem("carrinho"));
+        return Array.isArray(dados) ? dados : [];
+    } catch {
         return [];
     }
 }
 
-
-/*
- * Salva o carrinho no navegador.
- */
-
 function salvarCarrinho(carrinho) {
-
-    localStorage.setItem(
-        CHAVE_CARRINHO,
-        JSON.stringify(carrinho)
-    );
-
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
 }
 
-
-/*
- * Remove todo o carrinho.
- */
-
-function limparCarrinho() {
-
-    localStorage.removeItem(
-        CHAVE_CARRINHO
-    );
-
-}
-
-
-/*
- * Retorna a quantidade total de produtos.
- */
-
-function quantidadeTotalCarrinho() {
-
-    const carrinho =
-        obterCarrinho();
-
+function calcularTotalCarrinho(carrinho = obterCarrinho()) {
     return carrinho.reduce(
-        (total, item) =>
-            total + item.quantidade,
+        (total, item) => total + (Number(item.preco) * Number(item.quantidade)),
         0
     );
-
 }
 
+function adicionarProdutoCarrinho(produto, tamanho, quantidade) {
+    const carrinho = obterCarrinho();
 
-/*
- * Calcula o valor total do carrinho.
- */
-
-function calcularTotalCarrinho() {
-
-    const carrinho =
-        obterCarrinho();
-
-    return carrinho.reduce(
-        (total, item) =>
-            total +
-            (item.preco * item.quantidade),
-        0
+    const existente = carrinho.find(
+        item => item.id === produto.id && item.tamanho === tamanho
     );
 
-}
-
-
-/*
- * Adiciona um produto ao carrinho.
- */
-
-function adicionarProdutoCarrinho(
-    produto,
-    tamanho,
-    quantidade
-) {
-
-    const carrinho =
-        obterCarrinho();
-
-    const itemExistente =
-        carrinho.find(item =>
-            item.produtoId === produto.id &&
-            item.tamanho === tamanho
-        );
-
-    if (itemExistente) {
-
-        itemExistente.quantidade += quantidade;
-
+    if (existente) {
+        existente.quantidade += quantidade;
     } else {
-
         carrinho.push({
-
-            produtoId: produto.id,
-
+            id: produto.id,
             nome: produto.nome,
-
             preco: produto.preco,
-
             tamanho: tamanho,
-
             quantidade: quantidade
-
         });
-
     }
 
     salvarCarrinho(carrinho);
-
+    atualizarContadorHeader();
+    renderizarDrawer();
 }
 
+function abrirDrawer() {
+    const drawer = document.getElementById("cartDrawer");
+    const overlay = document.getElementById("drawerOverlay");
 
-/*
- * Altera a quantidade de um item.
- */
+    if (!drawer || !overlay) return;
 
-function alterarQuantidadeCarrinho(
-    index,
-    mudanca
-) {
+    drawer.classList.add("ativo");
+    overlay.classList.add("ativo");
+    renderizarDrawer();
+}
 
-    const carrinho =
-        obterCarrinho();
+function fecharDrawer() {
+    document.getElementById("cartDrawer")?.classList.remove("ativo");
+    document.getElementById("drawerOverlay")?.classList.remove("ativo");
+}
 
-    if (!carrinho[index]) {
-        return;
-    }
+function alterarQtdDrawer(index, mudanca) {
+    const carrinho = obterCarrinho();
+    if (!carrinho[index]) return;
 
     carrinho[index].quantidade += mudanca;
 
     if (carrinho[index].quantidade <= 0) {
-
         carrinho.splice(index, 1);
-
     }
 
     salvarCarrinho(carrinho);
-
+    renderizarDrawer();
+    atualizarContadorHeader();
 }
 
+function renderizarDrawer() {
+    const container = document.getElementById("drawerItems");
+    const totalElemento = document.getElementById("drawerTotal");
 
-/*
- * Remove um item específico.
- */
+    if (!container || !totalElemento) return;
 
-function removerItemCarrinho(index) {
-
-    const carrinho =
-        obterCarrinho();
-
-    if (!carrinho[index]) {
-        return;
-    }
-
-    carrinho.splice(index, 1);
-
-    salvarCarrinho(carrinho);
-
-}
-
-
-/*
- * Atualiza o contador do carrinho.
- */
-
-function atualizarContadorCarrinho() {
-
-    const contador =
-        document.getElementById(
-            "badge-total"
-        );
-
-    if (!contador) {
-        return;
-    }
-
-    contador.innerText =
-        quantidadeTotalCarrinho();
-
-}
-
-
-/*
- * Renderiza o carrinho lateral.
- */
-
-function renderizarDrawerCarrinho() {
-
-    const container =
-        document.getElementById(
-            "drawerItems"
-        );
-
-    const totalElemento =
-        document.getElementById(
-            "drawerTotal"
-        );
-
-    if (!container) {
-        return;
-    }
-
-    const carrinho =
-        obterCarrinho();
+    const carrinho = obterCarrinho();
 
     if (carrinho.length === 0) {
-
         container.innerHTML = `
-            <p style="
-                text-align:center;
-                color:#888;
-                margin-top:40px;
-            ">
+            <p style="text-align:center;color:#888;margin-top:40px;">
                 Seu carrinho está vazio.
             </p>
         `;
-
-        if (totalElemento) {
-            totalElemento.innerText =
-                formatarMoeda(0);
-        }
-
+        totalElemento.textContent = formatarMoeda(0);
         return;
     }
 
-    container.innerHTML = "";
+    container.innerHTML = carrinho.map((item, index) => `
+        <div class="item-drawer">
+            <div class="item-info">
+                <h4>${item.nome}</h4>
+                <p>Tamanho: ${item.tamanho}</p>
+                <p>${formatarMoeda(item.preco)}</p>
+                <button
+                    class="btn-remover-sm"
+                    onclick="alterarQtdDrawer(${index}, -${item.quantidade})">
+                    Remover
+                </button>
+            </div>
 
-    carrinho.forEach(
-        (item, index) => {
+            <div style="display:flex;align-items:center;gap:6px;">
+                <button class="qtd-btn"
+                        onclick="alterarQtdDrawer(${index}, -1)"
+                        aria-label="Diminuir quantidade">-</button>
+                <strong>${item.quantidade}</strong>
+                <button class="qtd-btn"
+                        onclick="alterarQtdDrawer(${index}, 1)"
+                        aria-label="Aumentar quantidade">+</button>
+            </div>
+        </div>
+    `).join("");
 
-            const subtotal =
-                item.preco *
-                item.quantidade;
+    totalElemento.textContent = formatarMoeda(calcularTotalCarrinho(carrinho));
+}
 
-            const elemento =
-                document.createElement("div");
+function atualizarContadorHeader() {
+    const badge = document.getElementById("badge-total");
+    if (!badge) return;
 
-            elemento.className =
-                "item-drawer";
-
-            elemento.innerHTML = `
-
-                <div class="item-info">
-
-                    <h4>
-                        ${item.nome}
-                    </h4>
-
-                    <p>
-                        Tamanho:
-                        ${item.tamanho}
-                    </p>
-
-                    <p>
-                        ${formatarMoeda(item.preco)}
-                    </p>
-
-                    <button
-                        class="btn-remover-sm"
-                        onclick="removerItemDrawer(${index})">
-
-                        Remover
-
-                    </button>
-
-                </div>
-
-                <div class="qtd-controle">
-
-                    <button
-                        class="qtd-btn"
-                        onclick="alterarItemDrawer(${index}, -1)">
-                        -
-                    </button>
-
-                    <strong>
-                        ${item.quantidade}
-                    </strong>
-
-                    <button
-                        class="qtd-btn"
-                        onclick="alterarItemDrawer(${index}, 1)">
-                        +
-                    </button>
-
-                </div>
-            `;
-
-            container.appendChild(elemento);
-
-        }
+    const totalItens = obterCarrinho().reduce(
+        (total, item) => total + Number(item.quantidade || 0),
+        0
     );
 
-    if (totalElemento) {
-
-        totalElemento.innerText =
-            formatarMoeda(
-                calcularTotalCarrinho()
-            );
-
-    }
-
+    badge.textContent = totalItens;
 }
 
+function renderizarCarrinhoPagina() {
+    const lista = document.getElementById("lista-carrinho");
+    const totalElemento = document.getElementById("preco-total");
 
-/*
- * Funções utilizadas pelos botões
- * do drawer.
- */
+    if (!lista || !totalElemento) return;
 
-function alterarItemDrawer(
-    index,
-    mudanca
-) {
+    const carrinho = obterCarrinho();
 
-    alterarQuantidadeCarrinho(
-        index,
-        mudanca
-    );
+    if (carrinho.length === 0) {
+        lista.innerHTML = `
+            <div class="vazio">
+                <h3>Seu carrinho está vazio.</h3>
+                <p>Adicione produtos para continuar.</p>
+                <a href="index.html">Voltar para a loja</a>
+            </div>
+        `;
+        totalElemento.textContent = formatarMoeda(0);
+        return;
+    }
 
-    atualizarContadorCarrinho();
+    let total = 0;
 
-    renderizarDrawerCarrinho();
+    lista.innerHTML = carrinho.map((item, index) => {
+        const subtotal = Number(item.preco) * Number(item.quantidade);
+        total += subtotal;
 
+        return `
+            <div class="item-carrinho">
+                <div class="detalhes-produto">
+                    <h3>${item.nome}</h3>
+                    <p>Tamanho: <strong>${item.tamanho}</strong></p>
+                    <p>Preço unitário: ${formatarMoeda(item.preco)}</p>
+
+                    <div class="controle">
+                        <button onclick="alterarQuantidade(${index}, -1)">-</button>
+                        <strong>${item.quantidade}</strong>
+                        <button onclick="alterarQuantidade(${index}, 1)">+</button>
+                        <button class="remover" onclick="removerItem(${index})">
+                            Remover
+                        </button>
+                    </div>
+                </div>
+
+                <div class="preco">${formatarMoeda(subtotal)}</div>
+            </div>
+        `;
+    }).join("");
+
+    totalElemento.textContent = formatarMoeda(total);
 }
 
+function alterarQuantidade(index, mudanca) {
+    const carrinho = obterCarrinho();
+    if (!carrinho[index]) return;
 
-function removerItemDrawer(index) {
+    carrinho[index].quantidade += mudanca;
 
-    removerItemCarrinho(index);
+    if (carrinho[index].quantidade <= 0) {
+        carrinho.splice(index, 1);
+    }
 
-    atualizarContadorCarrinho();
-
-    renderizarDrawerCarrinho();
-
+    salvarCarrinho(carrinho);
+    renderizarCarrinhoPagina();
+    atualizarContadorHeader();
 }
 
+function removerItem(index) {
+    const carrinho = obterCarrinho();
+    if (!carrinho[index]) return;
 
-/*
- * Abre o drawer.
- */
+    carrinho.splice(index, 1);
+    salvarCarrinho(carrinho);
 
-function abrirDrawer() {
-
-    const drawer =
-        document.getElementById(
-            "cartDrawer"
-        );
-
-    const overlay =
-        document.getElementById(
-            "drawerOverlay"
-        );
-
-    if (drawer) {
-        drawer.classList.add("ativo");
-    }
-
-    if (overlay) {
-        overlay.classList.add("ativo");
-    }
-
-    renderizarDrawerCarrinho();
-
+    renderizarCarrinhoPagina();
+    atualizarContadorHeader();
 }
 
-
-/*
- * Fecha o drawer.
- */
-
-function fecharDrawer() {
-
-    const drawer =
-        document.getElementById(
-            "cartDrawer"
-        );
-
-    const overlay =
-        document.getElementById(
-            "drawerOverlay"
-        );
-
-    if (drawer) {
-        drawer.classList.remove("ativo");
+function irParaCadastro() {
+    if (obterCarrinho().length === 0) {
+        alert("Seu carrinho está vazio.");
+        return;
     }
 
-    if (overlay) {
-        overlay.classList.remove("ativo");
-    }
-
+    window.location.href = "cadastro.html";
 }
 
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") fecharDrawer();
+});
 
-/*
- * Inicialização.
- */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        atualizarContadorCarrinho();
-
-        renderizarDrawerCarrinho();
-
-    }
-);
-
-
-/*
- * Atualiza automaticamente se o
- * carrinho for alterado em outra aba.
- */
-
-window.addEventListener(
-    "storage",
-    function(event) {
-
-        if (
-            event.key === CHAVE_CARRINHO
-        ) {
-
-            atualizarContadorCarrinho();
-
-            renderizarDrawerCarrinho();
-
-        }
-
-    }
-);
-
-
-/*
- * ESC fecha o drawer.
- */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Escape") {
-
-            fecharDrawer();
-
-        }
-
-    }
-);
-
+document.addEventListener("DOMContentLoaded", () => {
+    atualizarContadorHeader();
+    renderizarDrawer();
+    renderizarCarrinhoPagina();
+});
